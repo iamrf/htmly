@@ -1,0 +1,51 @@
+{
+  "name": "Blogen",
+  "version": "1.0.0",
+  "author": "HTMLy",
+  "homepage": "https://www.htmly.com",
+  "description": "Modern English blog theme with Tailwind CSS. Mobile-friendly magazine layout.",
+  "settings": [
+    {
+      "type": "checkbox",
+      "name": "post_tag",
+      "label": "Post Tag",
+      "value": "true",
+      "info": "Show post tags"
+    },
+    {
+      "type": "checkbox",
+      "name": "post_navigation",
+      "label": "Post Navigation",
+      "value": "true",
+      "info": "Enable previous/next post navigation"
+    },
+    {
+      "type": "checkbox",
+      "name": "recent_posts",
+      "label": "Recent Posts",
+      "value": "true",
+      "info": "Show recent posts widget"
+    },
+    {
+      "type": "checkbox",
+      "name": "popular_posts",
+      "label": "Popular Posts",
+      "value": "",
+      "info": "Show popular posts widget (requires views counter)"
+    },
+    {
+      "type": "checkbox",
+      "name": "tagcloud",
+      "label": "TagCloud",
+      "value": "",
+      "info": "Enable tag cloud widget"
+    },
+    {
+      "type": "checkbox",
+      "name": "frontpage_posts",
+      "label": "Static Frontpage Posts",
+      "value": "true",
+      "info": "Show recent posts on static frontpage"
+    }
+  ]
+}
