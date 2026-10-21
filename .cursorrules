@@ -1,0 +1,41 @@
+# HTMLy — Cursor Rules
+
+You are working in the **HTMLy** flat-file CMS repository (PHP). Prefer compatibility with the installed core version (`HTMLY_VERSION` in `index.php`).
+
+## Architecture
+
+- **No database.** Content lives under `content/`; config under `config/`.
+- Front controller: `index.php` → `system/htmly.php` (routes) + `system/includes/dispatch.php` + `system/includes/functions.php`.
+- Themes live in `themes/<name>/` and are selected via `config('views.root')` (e.g. `themes/modern-bilingual`).
+
+## Theme development (required patterns)
+
+- Every template **must** start with: `<?php if (!defined('HTMLY')) die('HTMLy'); ?>`
+- Theme settings schema: `themes/<name>/theme.json` (`settings[]` with `type`, `name`, `label`, `value`, `info`; `select` needs `options`).
+- Live settings are saved to `config/themes/<name>.ini` and read with `theme_config('key')`.
+- Optional theme helpers: `themes/<name>/functions.php` (auto-included on each `render()`; guard with `function_exists`).
+- Core templates: `layout.html.php`, `main.html.php`, `post.html.php`, `static.html.php`, `profile.html.php`, `404.html.php`, `404-search.html.php`, `no-posts.html.php`.
+- Optional overrides HTMLy actually loads: `main--category.html.php`, `main--tag.html.php`, `main--archive.html.php`, `main--search.html.php`, `main--front.html.php`, `static--front.html.php`, `layout--*.html.php`.
+- Prefer logical CSS (`ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`, `text-start`) for LTR/RTL.
+
+## Native helpers (use these; do not reinvent)
+
+`config()`, `theme_config()`, `site_url()`, `theme_path()`, `blog_title()`, `blog_tagline()`, `blog_description()`, `blog_language()`, `menu()`, `social()`, `copyright()`, `i18n()`, `format_date()`, `get_teaser()`, `get_related()`, `recent_posts()`, `popular_posts()`, `category_list()`, `tag_cloud()`, `archive_list()`, `head_contents()`, `is_index()`, `login()`, `toolbar()`, `authorized()`, `analytics()`, `facebook()`, `disqus()`, `search()`, `shorten()`, `get_image()`, `get_video_id()`, `content()`.
+
+## Template variables (common)
+
+- Lists: `$posts`, `$pagination`, `$page`, `$breadcrumb`, `$metatags`, `$bodyclass`
+- Flags: `$is_front`, `$is_taxonomy`, `$is_tag`, `$is_archive`, `$is_search`
+- Objects: `$p` / `$static` (single), `$category`, `$tag`, `$archive`, `$search`, `$taxonomy`, `$author`, `$next`, `$prev`
+
+## Safety
+
+- Always null-check theme settings and post fields (`isset`, `!empty`, null coalescing).
+- Never commit secrets (`.env`, credentials). Do not force-push `master`/`main`.
+- Only commit when the user explicitly asks.
+
+## Theme reference
+
+- Canonical structure reference: `themes/blog/`
+- Modern bilingual reference: `themes/modern-bilingual/` (Tailwind, RTL, Jalali)
+- Persian RTL reference: `themes/blogfa/`

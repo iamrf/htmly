@@ -1,0 +1,194 @@
+<?php if (!defined('HTMLY')) die('HTMLy');
+$showToc = mb_enabled('post_toc', true);
+$showShare = mb_enabled('post_share', true);
+$showNav = mb_enabled('post_navigation', true);
+$showRelated = mb_enabled('related_posts', true);
+$showTags = mb_enabled('post_tag', true);
+?>
+
+<?php if (!empty($breadcrumb)): ?>
+<nav class="mb-breadcrumb" aria-label="Breadcrumb"><?php echo $breadcrumb; ?></nav>
+<?php endif; ?>
+
+<article class="animate-fade-up" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+    <?php if (login()) { echo tab($p); } ?>
+
+    <header class="mb-8 border-b border-zinc-200 pb-8 dark:border-zinc-800">
+        <div class="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-zinc-500 dark:text-zinc-400">
+            <time datetime="<?php echo date('c', $p->date); ?>" itemprop="datePublished"><?php echo mb_date($p->date, 'full'); ?></time>
+            <?php if (!empty($p->category)): ?>
+            <span class="text-zinc-300 dark:text-zinc-600">·</span>
+            <span itemprop="articleSection"><?php echo $p->category; ?></span>
+            <?php endif; ?>
+            <span class="text-zinc-300 dark:text-zinc-600">·</span>
+            <span><?php echo mb_reading_label($p); ?></span>
+            <?php if (authorized($p)): ?>
+            <span class="text-zinc-300 dark:text-zinc-600">·</span>
+            <a class="hover:text-zinc-900 dark:hover:text-zinc-100" href="<?php echo $p->url; ?>/edit?destination=post"><?php echo i18n('edit'); ?></a>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!empty($p->link)): ?>
+        <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl md:text-5xl" itemprop="headline">
+            <a href="<?php echo $p->link; ?>" target="_blank" rel="noopener"><?php echo $p->title; ?>
+                <i data-lucide="external-link" class="inline h-6 w-6 opacity-40"></i>
+            </a>
+        </h1>
+        <?php else: ?>
+        <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl md:text-5xl" itemprop="headline"><?php echo $p->title; ?></h1>
+        <?php endif; ?>
+
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <?php if (!empty($p->authorAvatar)): ?>
+                <img class="h-10 w-10 rounded-full object-cover ring-2 ring-zinc-100 dark:ring-zinc-800" src="<?php echo htmlspecialchars($p->authorAvatar, ENT_QUOTES, 'UTF-8'); ?>" alt="" width="40" height="40">
+                <?php endif; ?>
+                <div>
+                    <a class="font-medium text-zinc-900 dark:text-zinc-100" href="<?php echo $p->authorUrl; ?>" itemprop="author"><?php echo $p->authorName; ?></a>
+                    <p class="text-xs text-zinc-500"><?php echo i18n('Posted_in'); ?> <?php echo isset($p->category) ? $p->category : ''; ?></p>
+                </div>
+            </div>
+
+            <?php if ($showShare): ?>
+            <div class="flex items-center gap-1">
+                <button type="button" data-copy-link="<?php echo htmlspecialchars($p->url, ENT_QUOTES, 'UTF-8'); ?>" class="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800">
+                    <i data-lucide="link" class="h-3.5 w-3.5"></i>
+                    <span><?php echo mb_lang_code() === 'fa' ? 'کپی لینک' : 'Copy link'; ?></span>
+                </button>
+                <a class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800" target="_blank" rel="noopener" href="https://twitter.com/share?url=<?php echo urlencode($p->url); ?>&text=<?php echo urlencode(strip_tags($p->title)); ?>" aria-label="Share on X">
+                    <i data-lucide="twitter" class="h-3.5 w-3.5"></i>
+                </a>
+                <a class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800" target="_blank" rel="noopener" href="https://www.facebook.com/sharer.php?u=<?php echo urlencode($p->url); ?>" aria-label="Share on Facebook">
+                    <i data-lucide="facebook" class="h-3.5 w-3.5"></i>
+                </a>
+                <a class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($p->url); ?>" aria-label="Share on LinkedIn">
+                    <i data-lucide="linkedin" class="h-3.5 w-3.5"></i>
+                </a>
+            </div>
+            <?php endif; ?>
+        </div>
+    </header>
+
+    <div class="grid gap-10 <?php echo $showToc ? 'lg:grid-cols-12' : ''; ?>">
+        <div class="<?php echo $showToc ? 'lg:col-span-8' : ''; ?>">
+            <div class="mb-8">
+                <?php echo mb_post_media($p, false); ?>
+            </div>
+
+            <div class="prose prose-zinc prose-mb max-w-none dark:prose-invert prose-headings:scroll-mt-24 prose-a:text-zinc-900 dark:prose-a:text-zinc-100" data-article-body itemprop="articleBody">
+                <?php echo $p->body; ?>
+            </div>
+
+            <?php if ($showTags && !empty($p->tag)): ?>
+            <div class="mt-10 border-t border-zinc-200 pt-6 dark:border-zinc-800">
+                <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400"><?php echo i18n('Tags'); ?></h2>
+                <div class="tags flex flex-wrap gap-2"><?php echo $p->tag; ?></div>
+            </div>
+            <?php endif; ?>
+
+            <?php if ($showShare): ?>
+            <div class="mt-8 flex flex-wrap items-center gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <span class="me-2 text-sm font-medium text-zinc-600 dark:text-zinc-300"><?php echo mb_lang_code() === 'fa' ? 'اشتراک‌گذاری' : 'Share'; ?></span>
+                <button type="button" data-copy-link="<?php echo htmlspecialchars($p->url, ENT_QUOTES, 'UTF-8'); ?>" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-800 dark:ring-zinc-700">
+                    <i data-lucide="copy" class="h-3.5 w-3.5"></i> Copy
+                </button>
+                <a class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-800 dark:ring-zinc-700" target="_blank" rel="noopener" href="https://twitter.com/share?url=<?php echo urlencode($p->url); ?>&text=<?php echo urlencode(strip_tags($p->title)); ?>">X</a>
+                <a class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-800 dark:ring-zinc-700" target="_blank" rel="noopener" href="https://www.facebook.com/sharer.php?u=<?php echo urlencode($p->url); ?>">Facebook</a>
+            </div>
+            <?php endif; ?>
+
+            <!-- Author box -->
+            <div class="mt-10 flex gap-4 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+                <?php if (!empty($p->authorAvatar)): ?>
+                <img class="h-14 w-14 shrink-0 rounded-full object-cover ring-2 ring-zinc-100 dark:ring-zinc-800" src="<?php echo htmlspecialchars($p->authorAvatar, ENT_QUOTES, 'UTF-8'); ?>" alt="" width="56" height="56">
+                <?php endif; ?>
+                <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-zinc-400"><?php echo mb_lang_code() === 'fa' ? 'نویسنده' : 'Author'; ?></p>
+                    <a class="text-lg font-semibold text-zinc-900 dark:text-zinc-50" href="<?php echo $p->authorUrl; ?>"><?php echo $p->authorName; ?></a>
+                    <?php if (!empty($p->authorAbout)): ?>
+                    <p class="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400"><?php echo $p->authorAbout; ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <?php if ($showNav && (!empty($next) || !empty($prev))): ?>
+            <nav class="mt-10 grid gap-4 sm:grid-cols-2">
+                <?php if (!empty($next)): ?>
+                <a class="group rounded-2xl border border-zinc-200 bg-white p-5 transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600" href="<?php echo $next['url']; ?>" rel="next">
+                    <p class="mb-1 flex items-center gap-1 text-xs font-medium text-zinc-400">
+                        <i data-lucide="arrow-left" class="h-3.5 w-3.5 rtl:rotate-180"></i>
+                        <?php echo i18n('Next'); ?>
+                    </p>
+                    <p class="font-semibold text-zinc-900 group-hover:underline dark:text-zinc-100"><?php echo $next['title']; ?></p>
+                </a>
+                <?php else: ?>
+                <div></div>
+                <?php endif; ?>
+                <?php if (!empty($prev)): ?>
+                <a class="group rounded-2xl border border-zinc-200 bg-white p-5 text-end transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600" href="<?php echo $prev['url']; ?>" rel="prev">
+                    <p class="mb-1 flex items-center justify-end gap-1 text-xs font-medium text-zinc-400">
+                        <?php echo i18n('Prev'); ?>
+                        <i data-lucide="arrow-right" class="h-3.5 w-3.5 rtl:rotate-180"></i>
+                    </p>
+                    <p class="font-semibold text-zinc-900 group-hover:underline dark:text-zinc-100"><?php echo $prev['title']; ?></p>
+                </a>
+                <?php endif; ?>
+            </nav>
+            <?php endif; ?>
+
+            <?php if ($showRelated && !empty($p->related)): ?>
+            <?php $related = get_related($p->related, true, config('related.count')); ?>
+            <?php if (!empty($related) && is_array($related)): ?>
+            <section class="mt-12 border-t border-zinc-200 pt-10 dark:border-zinc-800">
+                <h2 class="mb-6 text-xl font-bold tracking-tight"><?php echo i18n('Related_posts'); ?></h2>
+                <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <?php foreach ($related as $rl): ?>
+                        <?php echo mb_render_card($rl, 'grid'); ?>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+            <?php endif; ?>
+            <?php endif; ?>
+
+            <?php if (facebook() || disqus()): ?>
+            <section class="mt-12 border-t border-zinc-200 pt-10 dark:border-zinc-800" id="comments">
+                <h2 class="mb-6 text-xl font-bold tracking-tight"><?php echo i18n('Comments'); ?></h2>
+                <?php if (facebook()): ?>
+                    <div class="fb-comments" data-href="<?php echo $p->url; ?>" data-numposts="<?php echo config('fb.num'); ?>" data-colorscheme="<?php echo config('fb.color'); ?>"></div>
+                <?php endif; ?>
+                <?php if (disqus()): ?>
+                    <?php echo disqus($p->title, $p->url); ?>
+                    <div id="disqus_thread"></div>
+                <?php endif; ?>
+            </section>
+            <?php endif; ?>
+        </div>
+
+        <?php if ($showToc): ?>
+        <aside class="hidden lg:col-span-4 lg:block">
+            <div class="mb-toc sticky top-24 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+                <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400"><?php echo mb_lang_code() === 'fa' ? 'فهرست مطالب' : 'On this page'; ?></h2>
+                <div id="mb-toc" class="hidden"></div>
+                <p class="toc-empty text-xs text-zinc-400" id="toc-fallback"><?php echo mb_lang_code() === 'fa' ? 'سرفصلی یافت نشد' : 'No headings found'; ?></p>
+            </div>
+        </aside>
+        <?php endif; ?>
+    </div>
+</article>
+
+<?php if (disqus_count()): ?>
+    <?php echo disqus_count(); ?>
+<?php endif; ?>
+
+<script>
+(function () {
+  var toc = document.getElementById('mb-toc');
+  var fallback = document.getElementById('toc-fallback');
+  if (!toc) return;
+  // Hide fallback once TOC is populated by app.js
+  var obs = new MutationObserver(function () {
+    if (toc.children.length && fallback) fallback.classList.add('hidden');
+  });
+  obs.observe(toc, { childList: true });
+})();
+</script>

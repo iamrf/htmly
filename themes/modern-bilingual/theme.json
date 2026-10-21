@@ -1,0 +1,282 @@
+{
+  "name": "Modern Bilingual",
+  "version": "1.0.0",
+  "author": "HTMLy",
+  "homepage": "https://www.htmly.com",
+  "description": "Modern bilingual (LTR/RTL) HTMLy theme with Tailwind CSS, dark mode, Jalali dates, Lucide icons, and full dashboard settings.",
+  "settings": [
+    {
+      "type": "select",
+      "name": "text_direction",
+      "label": "Text Direction",
+      "value": "auto",
+      "options": ["auto", "ltr", "rtl"],
+      "info": "auto = detect from language (fa/ar/he/ur → RTL). Or force ltr/rtl."
+    },
+    {
+      "type": "checkbox",
+      "name": "jalali_date",
+      "label": "Jalali Date",
+      "value": "",
+      "info": "Force Jalali (Persian) calendar. Auto-enabled when language is fa."
+    },
+    {
+      "type": "checkbox",
+      "name": "persian_digits",
+      "label": "Persian Digits",
+      "value": "",
+      "info": "Convert 0-9 to ۰-۹. Auto-enabled for Persian RTL."
+    },
+    {
+      "type": "select",
+      "name": "default_color_mode",
+      "label": "Default Color Mode",
+      "value": "system",
+      "options": ["system", "light", "dark"],
+      "info": "Initial theme before user preference in localStorage."
+    },
+    {
+      "type": "select",
+      "name": "sidebar_position",
+      "label": "Sidebar Position",
+      "value": "end",
+      "options": ["end", "start", "hidden"],
+      "info": "Logical end/start so it mirrors correctly in RTL."
+    },
+    {
+      "type": "checkbox",
+      "name": "sticky_navbar",
+      "label": "Sticky Navbar",
+      "value": "true",
+      "info": "Keep the glassmorphism navbar fixed at the top."
+    },
+    {
+      "type": "checkbox",
+      "name": "reading_progress",
+      "label": "Reading Progress Bar",
+      "value": "true",
+      "info": "Show a progress bar while reading a single post."
+    },
+    {
+      "type": "select",
+      "name": "post_card_style",
+      "label": "Post Card Style",
+      "value": "grid",
+      "options": ["grid", "list"],
+      "info": "Homepage and archive card layout."
+    },
+    {
+      "type": "checkbox",
+      "name": "cta_enable",
+      "label": "Header CTA Enable",
+      "value": "",
+      "info": "Show a call-to-action button in the navbar."
+    },
+    {
+      "type": "text",
+      "name": "cta_text",
+      "label": "Header CTA Text",
+      "value": "Get Started",
+      "info": "Button label."
+    },
+    {
+      "type": "text",
+      "name": "cta_url",
+      "label": "Header CTA URL",
+      "value": "#",
+      "info": "Button link (absolute or relative)."
+    },
+    {
+      "type": "select",
+      "name": "cta_target",
+      "label": "Header CTA Target",
+      "value": "_self",
+      "options": ["_self", "_blank"],
+      "info": "Open CTA in same tab or new tab."
+    },
+    {
+      "type": "select",
+      "name": "cta_style",
+      "label": "Header CTA Style",
+      "value": "primary",
+      "options": ["primary", "outline"],
+      "info": "Primary (filled) or outline button."
+    },
+    {
+      "type": "text",
+      "name": "referrer_param",
+      "label": "Referrer / Affiliate Param",
+      "value": "",
+      "info": "Appended to external outbound links, e.g. ref=myblog or utm_source=myblog"
+    },
+    {
+      "type": "checkbox",
+      "name": "hero_enable",
+      "label": "Hero Enable",
+      "value": "true",
+      "info": "Show hero section on the homepage."
+    },
+    {
+      "type": "text",
+      "name": "hero_title",
+      "label": "Hero Title",
+      "value": "",
+      "info": "Leave empty to use blog title."
+    },
+    {
+      "type": "text",
+      "name": "hero_subtitle",
+      "label": "Hero Subtitle",
+      "value": "",
+      "info": "Leave empty to use blog tagline/description."
+    },
+    {
+      "type": "select",
+      "name": "hero_bg_style",
+      "label": "Hero Background",
+      "value": "gradient",
+      "options": ["gradient", "minimal", "mesh"],
+      "info": "Visual style for the homepage hero."
+    },
+    {
+      "type": "checkbox",
+      "name": "hero_search",
+      "label": "Hero Search Bar",
+      "value": "true",
+      "info": "Show search input inside the hero."
+    },
+    {
+      "type": "checkbox",
+      "name": "frontpage_posts",
+      "label": "Static Frontpage Posts",
+      "value": "true",
+      "info": "Show recent posts below a static frontpage."
+    },
+    {
+      "type": "checkbox",
+      "name": "frontpage_posts",
+      "label": "Static Frontpage Posts",
+      "value": "true",
+      "info": "Show recent posts below a static frontpage."
+    },
+    {
+      "type": "checkbox",
+      "name": "featured_post",
+      "label": "Featured Post Block",
+      "value": "true",
+      "info": "Highlight a featured/pinned post on the homepage."
+    },
+    {
+      "type": "text",
+      "name": "featured_post_url",
+      "label": "Featured Post URL/Slug",
+      "value": "",
+      "info": "Optional: match post URL or slug. Empty = first post."
+    },
+    {
+      "type": "checkbox",
+      "name": "recent_posts",
+      "label": "Recent Posts Widget",
+      "value": "true",
+      "info": "Sidebar: recent posts with thumbnails."
+    },
+    {
+      "type": "checkbox",
+      "name": "popular_posts",
+      "label": "Popular Posts Widget",
+      "value": "",
+      "info": "Sidebar: popular posts (requires views counter)."
+    },
+    {
+      "type": "checkbox",
+      "name": "category_list",
+      "label": "Categories Widget",
+      "value": "true",
+      "info": "Sidebar: category list."
+    },
+    {
+      "type": "checkbox",
+      "name": "tagcloud",
+      "label": "Tag Cloud Widget",
+      "value": "true",
+      "info": "Sidebar: tag cloud with counts."
+    },
+    {
+      "type": "checkbox",
+      "name": "archive",
+      "label": "Archive Widget",
+      "value": "",
+      "info": "Sidebar: archive list."
+    },
+    {
+      "type": "checkbox",
+      "name": "author_bio",
+      "label": "Author Bio Card",
+      "value": "true",
+      "info": "Show author bio / about card in sidebar."
+    },
+    {
+      "type": "checkbox",
+      "name": "newsletter_widget",
+      "label": "Newsletter / Promo Widget",
+      "value": "",
+      "info": "Show custom HTML promo block in sidebar."
+    },
+    {
+      "type": "text",
+      "name": "newsletter_html",
+      "label": "Newsletter / Promo HTML",
+      "value": "",
+      "info": "Custom HTML for the promo widget (forms, embed, etc.)."
+    },
+    {
+      "type": "checkbox",
+      "name": "post_toc",
+      "label": "Table of Contents",
+      "value": "true",
+      "info": "Auto-generate TOC from h2/h3 on single posts."
+    },
+    {
+      "type": "checkbox",
+      "name": "post_share",
+      "label": "Share Buttons",
+      "value": "true",
+      "info": "Copy link + social share on single posts."
+    },
+    {
+      "type": "checkbox",
+      "name": "post_navigation",
+      "label": "Post Navigation",
+      "value": "true",
+      "info": "Previous / next post cards."
+    },
+    {
+      "type": "checkbox",
+      "name": "related_posts",
+      "label": "Related Posts",
+      "value": "true",
+      "info": "Related posts grid below article."
+    },
+    {
+      "type": "checkbox",
+      "name": "post_tag",
+      "label": "Post Tags",
+      "value": "true",
+      "info": "Show tags on single posts."
+    },
+    {
+      "type": "text",
+      "name": "footer_copyright",
+      "label": "Footer Copyright Override",
+      "value": "",
+      "info": "Optional custom copyright. Empty uses HTMLy copyright()."
+    },
+    {
+      "type": "checkbox",
+      "name": "footer_social",
+      "label": "Footer Social Links",
+      "value": "true",
+      "info": "Show social icons in the footer."
+    }
+  ]
+}
