@@ -107,10 +107,11 @@
             <div class="social-links flex flex-wrap items-center justify-center gap-2.5">
                 <?php echo social(); ?>
             </div>
+            <?php if (blog_copyright()): ?>
             <div class="text-sm text-mute">
-                <?php echo copyright(); ?>
+                <?php echo blog_copyright(); ?>
             </div>
-            <p class="text-xs text-mute/70">Blogen theme</p>
+            <?php endif; ?>
         </div>
     </footer>
 </div>

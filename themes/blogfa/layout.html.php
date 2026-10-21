@@ -102,10 +102,11 @@
             <div class="social-links flex flex-wrap items-center justify-center gap-3">
                 <?php echo social(); ?>
             </div>
+            <?php if (blog_copyright()): ?>
             <div class="text-sm text-mute">
-                <?php echo copyright(); ?>
+                <?php echo blog_copyright(); ?>
             </div>
-            <p class="text-xs text-mute/70">قالب بلاگفا · فونت وزیرمتن</p>
+            <?php endif; ?>
         </div>
     </footer>
 </div>
