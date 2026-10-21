@@ -4,7 +4,7 @@
  */
 include __DIR__ . '/static.html.php';
 
-if (mb_enabled('frontpage_posts', false) || theme_config('frontpage_posts')) {
+if (mb_enabled('frontpage_posts', true)) {
     $recent = recent_posts(true);
     if (!empty($recent) && is_array($recent)) {
         echo '<section class="mt-16 border-t border-zinc-200 pt-12 dark:border-zinc-800">';

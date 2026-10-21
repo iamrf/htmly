@@ -4,6 +4,9 @@ $showShare = mb_enabled('post_share', true);
 $showNav = mb_enabled('post_navigation', true);
 $showRelated = mb_enabled('related_posts', true);
 $showTags = mb_enabled('post_tag', true);
+// Side TOC only when site sidebar is hidden (avoids double sidebars); otherwise inline TOC
+$tocAside = $showToc && (mb_sidebar_position() === 'hidden');
+$tocInline = $showToc && !$tocAside;
 ?>
 
 <?php if (!empty($breadcrumb)): ?>
@@ -55,11 +58,19 @@ $showTags = mb_enabled('post_tag', true);
         </div>
     </header>
 
-    <div class="grid gap-10 <?php echo $showToc ? 'lg:grid-cols-12' : ''; ?>">
-        <div class="<?php echo $showToc ? 'lg:col-span-8' : ''; ?>">
+    <div class="grid gap-10 <?php echo $tocAside ? 'lg:grid-cols-12' : ''; ?>">
+        <div class="<?php echo $tocAside ? 'lg:col-span-8' : ''; ?>">
             <div class="mb-8">
                 <?php echo mb_post_media($p, false); ?>
             </div>
+
+            <?php if ($tocInline): ?>
+            <div class="mb-8 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+                <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400"><?php echo mb_lang_code() === 'fa' ? 'فهرست مطالب' : 'On this page'; ?></h2>
+                <div id="mb-toc" class="hidden"></div>
+                <p class="toc-empty text-xs text-zinc-400" id="toc-fallback"><?php echo mb_lang_code() === 'fa' ? 'سرفصلی یافت نشد' : 'No headings found'; ?></p>
+            </div>
+            <?php endif; ?>
 
             <div class="prose prose-zinc prose-mb max-w-none dark:prose-invert prose-headings:scroll-mt-24 prose-a:text-zinc-900 dark:prose-a:text-zinc-100" data-article-body itemprop="articleBody">
                 <?php echo $p->body; ?>
@@ -143,7 +154,7 @@ $showTags = mb_enabled('post_tag', true);
             <?php endif; ?>
         </div>
 
-        <?php if ($showToc): ?>
+        <?php if ($tocAside): ?>
         <aside class="hidden lg:col-span-4 lg:block">
             <div class="mb-toc sticky top-24 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
                 <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400"><?php echo mb_lang_code() === 'fa' ? 'فهرست مطالب' : 'On this page'; ?></h2>

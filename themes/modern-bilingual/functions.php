@@ -3,35 +3,238 @@
 /**
  * Modern Bilingual theme helpers.
  * Prefix: mb_ (modern-bilingual) to avoid collisions with core / other themes.
+ *
+ * HTMLy persists theme settings via json_encode() into config/themes/<theme>.ini.
+ * Values must be normalized; missing keys fall back to theme.json "value" defaults.
  */
 
 /**
- * Theme config with default fallback.
+ * Defaults from theme.json settings[].value (checkbox true/false → 1/0).
  */
-if (!function_exists('mb_config')) {
-    function mb_config($key, $default = null)
+if (!function_exists('mb_setting_defaults')) {
+    function mb_setting_defaults()
     {
-        $val = theme_config($key);
-        if ($val === null || $val === '') {
-            return $default;
+        static $defaults = null;
+        if ($defaults !== null) {
+            return $defaults;
+        }
+        $defaults = array();
+        $path = __DIR__ . '/theme.json';
+        if (!file_exists($path)) {
+            return $defaults;
+        }
+        $json = json_decode(file_get_contents($path), true);
+        if (empty($json['settings']) || !is_array($json['settings'])) {
+            return $defaults;
+        }
+        foreach ($json['settings'] as $setting) {
+            if (empty($setting['name'])) {
+                continue;
+            }
+            $name = $setting['name'];
+            $value = array_key_exists('value', $setting) ? $setting['value'] : '';
+            if (isset($setting['type']) && $setting['type'] === 'checkbox') {
+                $defaults[$name] = ($value === 'true' || $value === '1' || $value === 1 || $value === true) ? '1' : '0';
+            } else {
+                $defaults[$name] = is_bool($value) ? ($value ? '1' : '0') : (string)$value;
+            }
+        }
+        return $defaults;
+    }
+}
+
+/**
+ * Normalize values read from HTMLy theme INI (JSON-encoded strings, booleans, ints).
+ */
+if (!function_exists('mb_normalize_config_value')) {
+    function mb_normalize_config_value($val)
+    {
+        if ($val === null) {
+            return null;
+        }
+        if (is_bool($val)) {
+            return $val ? '1' : '0';
+        }
+        if (is_int($val) || is_float($val)) {
+            return (string)$val;
+        }
+        if (is_array($val)) {
+            return $val;
+        }
+        $val = trim((string)$val);
+        // Raw JSON string still quoted in memory (edge cases / RAW scanner)
+        if (strlen($val) >= 2 && $val[0] === '"' && substr($val, -1) === '"') {
+            $decoded = json_decode($val, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return mb_normalize_config_value($decoded);
+            }
+            $val = substr($val, 1, -1);
         }
         return $val;
     }
 }
 
 /**
- * Checkbox helpers (HTMLy stores "1" / "0").
+ * Raw theme_config with normalization (null if unset).
  */
-if (!function_exists('mb_enabled')) {
-    function mb_enabled($key, $default = false)
+if (!function_exists('mb_raw_config')) {
+    function mb_raw_config($key)
     {
-        $val = theme_config($key);
-        if ($val === null || $val === '') {
-            return (bool)$default;
+        if (!function_exists('theme_config')) {
+            return null;
         }
-        return ($val === '1' || $val === 1 || $val === true || $val === 'true');
+        // Avoid colliding with theme_config('source', …) internal API
+        if ($key === 'source') {
+            return null;
+        }
+        $val = theme_config($key);
+        if ($val === null) {
+            return null;
+        }
+        return mb_normalize_config_value($val);
     }
 }
+
+/**
+ * Theme config with theme.json default fallback.
+ * Explicit empty string is preserved (does not fall back).
+ */
+if (!function_exists('mb_config')) {
+    function mb_config($key, $default = null)
+    {
+        $val = mb_raw_config($key);
+        if ($val === null) {
+            if ($default !== null) {
+                return $default;
+            }
+            $defaults = mb_setting_defaults();
+            return array_key_exists($key, $defaults) ? $defaults[$key] : null;
+        }
+        return $val;
+    }
+}
+
+/**
+ * Checkbox helper. HTMLy stores "1"/"0" (JSON-encoded in INI).
+ * Unset keys use $default, then theme.json default.
+ */
+if (!function_exists('mb_enabled')) {
+    function mb_enabled($key, $default = null)
+    {
+        $val = mb_raw_config($key);
+        if ($val === null) {
+            if ($default !== null) {
+                return (bool)$default;
+            }
+            $defaults = mb_setting_defaults();
+            if (array_key_exists($key, $defaults)) {
+                $val = $defaults[$key];
+            } else {
+                return false;
+            }
+        }
+        if (is_bool($val)) {
+            return $val;
+        }
+        $val = strtolower(trim((string)$val));
+        if (in_array($val, array('0', 'false', 'off', 'no', 'none', ''), true)) {
+            return false;
+        }
+        return in_array($val, array('1', 'true', 'on', 'yes'), true);
+    }
+}
+
+/**
+ * Seed config/themes/modern-bilingual.ini with any missing keys from theme.json
+ * (same json_encode format HTMLy admin uses) and reload theme_config.
+ */
+if (!function_exists('mb_ensure_theme_ini')) {
+    function mb_ensure_theme_ini()
+    {
+        static $done = false;
+        if ($done) {
+            return;
+        }
+        $done = true;
+
+        $views = config('views.root');
+        if (empty($views) || strpos($views, 'modern-bilingual') === false) {
+            return;
+        }
+
+        $defaults = mb_setting_defaults();
+        if (empty($defaults)) {
+            return;
+        }
+
+        $dir = 'config/themes';
+        $file = $dir . '/modern-bilingual.ini';
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0775, true);
+        }
+
+        $existing = array();
+        if (file_exists($file)) {
+            $parsed = @parse_ini_file($file, true);
+            if (is_array($parsed)) {
+                $existing = $parsed;
+            }
+        }
+
+        $lines = file_exists($file) ? rtrim((string)file_get_contents($file)) : '';
+        $added = false;
+        foreach ($defaults as $key => $value) {
+            if (array_key_exists($key, $existing)) {
+                continue;
+            }
+            $encoded = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $lines .= "\n" . $key . ' = ' . $encoded;
+            $added = true;
+        }
+
+        if ($added) {
+            @file_put_contents($file, ltrim($lines) . "\n", LOCK_EX);
+        }
+
+        if (file_exists($file) && function_exists('theme_config')) {
+            theme_config('source', $file);
+        }
+
+        // Bust HTMLy page cache when theme settings INI changes (admin save)
+        mb_bust_cache_if_settings_changed($file);
+    }
+}
+
+/**
+ * Clear cache/page when theme INI mtime is newer than last seen stamp.
+ */
+if (!function_exists('mb_bust_cache_if_settings_changed')) {
+    function mb_bust_cache_if_settings_changed($iniFile)
+    {
+        if (!file_exists($iniFile)) {
+            return;
+        }
+        $mtime = (int)filemtime($iniFile);
+        $stampFile = 'cache/page/.mb-theme-stamp';
+        $prev = 0;
+        if (file_exists($stampFile)) {
+            $prev = (int)trim((string)@file_get_contents($stampFile));
+        }
+        if ($mtime <= $prev) {
+            return;
+        }
+        if (!is_dir('cache/page')) {
+            @mkdir('cache/page', 0775, true);
+        }
+        foreach (glob('cache/page/*.cache') ?: array() as $cacheFile) {
+            @unlink($cacheFile);
+        }
+        @file_put_contents($stampFile, (string)$mtime, LOCK_EX);
+    }
+}
+
+// Boot settings as soon as theme functions load
+mb_ensure_theme_ini();
 
 /**
  * Active language code (e.g. fa, en, ar).

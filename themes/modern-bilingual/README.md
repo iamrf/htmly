@@ -21,6 +21,7 @@ Production-ready bilingual (LTR/RTL) theme for [HTMLy](https://www.htmly.com/) v
 1. Ensure the theme folder is at `themes/modern-bilingual/`
 2. In HTMLy admin → Themes → select **Modern Bilingual**
 3. Open Theme Settings to configure CTA, hero, sidebar, Jalali, etc.
+4. Click **Save Config** — page cache is cleared automatically so guests see changes immediately.
 
 ## Local Tailwind build (optional)
 

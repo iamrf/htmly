@@ -55,20 +55,29 @@ if (file_exists($configPath)) {
         <div class="form-group row">
             <label class='col-sm-2 col-form-label'><?php echo $setting['label'];?></label>
             <div class="col-sm-10">
+                <?php
+                    // Prefer saved theme_config; fall back to theme.json "value" so defaults show correctly
+                    $savedVal = theme_config($setting['name']);
+                    if ($savedVal === null && array_key_exists('value', $setting)) {
+                        $savedVal = $setting['value'];
+                    }
+                    if ($setting['type'] === 'checkbox') {
+                        $isChecked = ($savedVal === '1' || $savedVal === 1 || $savedVal === true || $savedVal === 'true');
+                    }
+                ?>
                 <?php if ($setting['type'] === 'select'): ?>
                     <select class='form-control' name='-config-<?php echo $setting['name'];?>'>
                     <?php foreach ($setting['options'] as $option):?>
-                        <?php $selected = $option === theme_config($setting['name']) ? 'selected' : '';?>
+                        <?php $selected = (string)$option === (string)$savedVal ? 'selected' : '';?>
                         <option value='<?php echo $option;?>' <?php echo $selected;?>><?php echo $option;?></option>
                     <?php endforeach;?>
                     </select>
                 <?php elseif ($setting['type'] === 'checkbox'): ?>
-                    <?php $checked = theme_config($setting['name']) ? 'checked' : '';?>
                     <input type="hidden" name="-config-<?php echo $setting['name'];?>" value="0" />
-                    <input type='checkbox' name='-config-<?php echo $setting['name'];?>' <?php echo $checked;?> value="1"/>
+                    <input type='checkbox' name='-config-<?php echo $setting['name'];?>' <?php echo !empty($isChecked) ? 'checked' : '';?> value="1"/>
                     <br>
                 <?php else: ?>
-                    <input class="form-control" type="<?php echo $setting['type'];?>" name="-config-<?php echo $setting['name'];?>" value="<?php echo theme_config($setting['name']);?>"/>
+                    <input class="form-control" type="<?php echo $setting['type'];?>" name="-config-<?php echo $setting['name'];?>" value="<?php echo htmlspecialchars((string)$savedVal, ENT_QUOTES, 'UTF-8');?>"/>
                 <?php endif;?>
                 <small><?php echo $setting['info'];?></small>
             </div>

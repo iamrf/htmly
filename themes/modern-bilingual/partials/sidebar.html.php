@@ -6,11 +6,9 @@
     <div class="prose prose-sm prose-zinc max-w-none dark:prose-invert">
         <?php echo blog_description(); ?>
     </div>
-    <?php if (mb_enabled('footer_social', true)): ?>
     <div class="social-links mt-4">
         <?php echo mb_render_social('sidebar-social', 'sm'); ?>
     </div>
-    <?php endif; ?>
 </section>
 <?php endif; ?>
 

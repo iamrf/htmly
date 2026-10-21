@@ -3644,6 +3644,14 @@ post('/admin/themes/:theme', function ($theme) {
                 }
             }
             save_theme_config($new_config, $new_Keys, $theme);
+            // Theme settings change output for guests; drop stale page cache
+            if (function_exists('clear_cache')) {
+                clear_cache();
+            } else {
+                foreach (glob('cache/page/*.cache', GLOB_NOSORT) ?: array() as $_mbCacheFile) {
+                    @unlink($_mbCacheFile);
+                }
+            }
             $redir = site_url() . 'admin/themes/' . $theme;
             header("location: $redir");
         } else {

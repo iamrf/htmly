@@ -20,6 +20,7 @@
   function setStoredTheme(value) {
     try {
       localStorage.setItem('mb-theme', value);
+      localStorage.setItem('mb-theme-default', root.getAttribute('data-default-theme') || 'system');
     } catch (e) { /* ignore */ }
   }
 
@@ -33,9 +34,12 @@
     root.classList.toggle('dark', resolved === 'dark');
   }
 
+  function activeMode() {
+    return getStoredTheme() || root.getAttribute('data-default-theme') || 'system';
+  }
+
   function cycleTheme() {
-    var current = getStoredTheme() || root.getAttribute('data-default-theme') || 'system';
-    var resolved = resolveTheme(current);
+    var resolved = resolveTheme(activeMode());
     var next = resolved === 'dark' ? 'light' : 'dark';
     setStoredTheme(next);
     applyTheme(next);
@@ -50,7 +54,7 @@
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
     var stored = getStoredTheme();
     if (!stored || stored === 'system') {
-      applyTheme(stored || root.getAttribute('data-default-theme') || 'system');
+      applyTheme(activeMode());
     }
   });
 

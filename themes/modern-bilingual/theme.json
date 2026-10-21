@@ -154,13 +154,6 @@
     },
     {
       "type": "checkbox",
-      "name": "frontpage_posts",
-      "label": "Static Frontpage Posts",
-      "value": "true",
-      "info": "Show recent posts below a static frontpage."
-    },
-    {
-      "type": "checkbox",
       "name": "featured_post",
       "label": "Featured Post Block",
       "value": "true",

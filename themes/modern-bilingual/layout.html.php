@@ -11,11 +11,10 @@ $colorMode = mb_default_color_mode();
 $referrer = mb_referrer_param();
 $bodyclass = isset($bodyclass) ? $bodyclass : '';
 $isPost = (strpos($bodyclass, 'in-post') !== false);
-// On single posts with TOC enabled, skip site sidebar (article has its own TOC column)
-$showSidebar = ($sidebarPos !== 'hidden') && !($isPost && mb_enabled('post_toc', true));
+$showSidebar = ($sidebarPos !== 'hidden');
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo htmlspecialchars($lang, ENT_QUOTES, 'UTF-8'); ?>" dir="<?php echo $dir; ?>" class="scroll-smooth" id="html-root" data-default-theme="<?php echo htmlspecialchars($colorMode, ENT_QUOTES, 'UTF-8'); ?>">
+<html lang="<?php echo htmlspecialchars($lang, ENT_QUOTES, 'UTF-8'); ?>" dir="<?php echo $dir; ?>" class="scroll-smooth<?php echo $colorMode === 'dark' ? ' dark' : ''; ?>" id="html-root" data-default-theme="<?php echo htmlspecialchars($colorMode, ENT_QUOTES, 'UTF-8'); ?>">
 <head>
     <?php echo head_contents(); ?>
     <?php echo isset($metatags) ? $metatags : ''; ?>
@@ -23,15 +22,26 @@ $showSidebar = ($sidebarPos !== 'hidden') && !($isPost && mb_enabled('post_toc',
     <script>
     (function () {
         var root = document.documentElement;
-        var stored = null;
-        try { stored = localStorage.getItem('mb-theme'); } catch (e) {}
         var def = root.getAttribute('data-default-theme') || 'system';
-        var mode = stored || def;
-        function apply(m) {
-            var dark = m === 'dark' || (m === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            root.classList.toggle('dark', dark);
+        var stored = null;
+        var storedDef = null;
+        try {
+            stored = localStorage.getItem('mb-theme');
+            storedDef = localStorage.getItem('mb-theme-default');
+        } catch (e) {}
+        // If admin default_color_mode changed, drop stale user preference
+        if (storedDef !== def) {
+            try {
+                localStorage.setItem('mb-theme-default', def);
+                if (storedDef !== null) {
+                    localStorage.removeItem('mb-theme');
+                    stored = null;
+                }
+            } catch (e) {}
         }
-        apply(mode);
+        var mode = stored || def;
+        var dark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        root.classList.toggle('dark', dark);
     })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
