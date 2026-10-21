@@ -277,6 +277,160 @@
       "label": "Footer Social Links",
       "value": "true",
       "info": "Show social icons in the footer."
+    },
+    {
+      "type": "checkbox",
+      "name": "social_show_rss",
+      "label": "Show RSS in Social Links",
+      "value": "true",
+      "info": "Include RSS feed icon with profile social links."
+    },
+    {
+      "type": "text",
+      "name": "share_networks",
+      "label": "Share Networks",
+      "value": "x,facebook,linkedin,telegram,whatsapp,reddit,bluesky,email,copy",
+      "info": "Comma-separated share buttons: x,facebook,linkedin,telegram,whatsapp,reddit,bluesky,email,copy"
+    },
+    {
+      "type": "text",
+      "name": "social_x",
+      "label": "Social: X (Twitter)",
+      "value": "",
+      "info": "Profile URL. Overrides HTMLy Widgets → Twitter when set."
+    },
+    {
+      "type": "text",
+      "name": "social_bluesky",
+      "label": "Social: Bluesky",
+      "value": "",
+      "info": "https://bsky.app/profile/…"
+    },
+    {
+      "type": "text",
+      "name": "social_facebook",
+      "label": "Social: Facebook",
+      "value": "",
+      "info": "Facebook page/profile URL"
+    },
+    {
+      "type": "text",
+      "name": "social_instagram",
+      "label": "Social: Instagram",
+      "value": "",
+      "info": "Instagram profile URL"
+    },
+    {
+      "type": "text",
+      "name": "social_linkedin",
+      "label": "Social: LinkedIn",
+      "value": "",
+      "info": "LinkedIn profile/company URL"
+    },
+    {
+      "type": "text",
+      "name": "social_github",
+      "label": "Social: GitHub",
+      "value": "",
+      "info": "GitHub profile/org URL"
+    },
+    {
+      "type": "text",
+      "name": "social_youtube",
+      "label": "Social: YouTube",
+      "value": "",
+      "info": "YouTube channel URL"
+    },
+    {
+      "type": "text",
+      "name": "social_mastodon",
+      "label": "Social: Mastodon",
+      "value": "",
+      "info": "Mastodon profile URL"
+    },
+    {
+      "type": "text",
+      "name": "social_tiktok",
+      "label": "Social: TikTok",
+      "value": "",
+      "info": "TikTok profile URL"
+    },
+    {
+      "type": "text",
+      "name": "social_telegram",
+      "label": "Social: Telegram",
+      "value": "",
+      "info": "https://t.me/username"
+    },
+    {
+      "type": "text",
+      "name": "social_whatsapp",
+      "label": "Social: WhatsApp",
+      "value": "",
+      "info": "https://wa.me/1234567890 or community link"
+    },
+    {
+      "type": "text",
+      "name": "social_discord",
+      "label": "Social: Discord",
+      "value": "",
+      "info": "Discord invite / server URL"
+    },
+    {
+      "type": "text",
+      "name": "social_threads",
+      "label": "Social: Threads",
+      "value": "",
+      "info": "https://www.threads.net/@username"
+    },
+    {
+      "type": "text",
+      "name": "social_medium",
+      "label": "Social: Medium",
+      "value": "",
+      "info": "Medium profile URL"
+    },
+    {
+      "type": "text",
+      "name": "social_reddit",
+      "label": "Social: Reddit",
+      "value": "",
+      "info": "Subreddit or user URL"
+    },
+    {
+      "type": "text",
+      "name": "social_pinterest",
+      "label": "Social: Pinterest",
+      "value": "",
+      "info": "Pinterest profile URL"
+    },
+    {
+      "type": "text",
+      "name": "social_dribbble",
+      "label": "Social: Dribbble",
+      "value": "",
+      "info": "Dribbble profile URL"
+    },
+    {
+      "type": "text",
+      "name": "social_behance",
+      "label": "Social: Behance",
+      "value": "",
+      "info": "Behance profile URL"
+    },
+    {
+      "type": "text",
+      "name": "social_email",
+      "label": "Social: Email",
+      "value": "",
+      "info": "email@example.com or mailto: link"
+    },
+    {
+      "type": "text",
+      "name": "social_website",
+      "label": "Social: Website",
+      "value": "",
+      "info": "External website / portfolio URL"
     }
   ]
 }

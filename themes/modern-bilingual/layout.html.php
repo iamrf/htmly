@@ -94,6 +94,22 @@ $showSidebar = ($sidebarPos !== 'hidden') && !($isPost && mb_enabled('post_toc',
             </nav>
 
             <div class="flex items-center gap-1 sm:gap-2">
+                <div class="nav-social hidden items-center gap-1 xl:flex" aria-hidden="false">
+                    <?php
+                    $navSocial = mb_social_links();
+                    $navShown = 0;
+                    foreach ($navSocial as $ns) {
+                        if ($ns['id'] === 'rss') {
+                            continue;
+                        }
+                        if ($navShown >= 3) {
+                            break;
+                        }
+                        $navShown++;
+                        echo '<a class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100" href="' . htmlspecialchars($ns['url'], ENT_QUOTES, 'UTF-8') . '" target="_blank" rel="me noopener noreferrer" title="' . htmlspecialchars($ns['label'], ENT_QUOTES, 'UTF-8') . '" aria-label="' . htmlspecialchars($ns['label'], ENT_QUOTES, 'UTF-8') . '">' . mb_brand_icon($ns['icon'], 'mb-brand-icon h-3.5 w-3.5') . '</a>';
+                    }
+                    ?>
+                </div>
                 <button type="button" class="search-open inline-flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100" aria-label="Search" title="Search (Ctrl/Cmd+K)">
                     <i data-lucide="search" class="h-4 w-4"></i>
                 </button>
@@ -163,7 +179,7 @@ $showSidebar = ($sidebarPos !== 'hidden') && !($isPost && mb_enabled('post_toc',
         <div class="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-10 text-center sm:px-6 lg:px-8">
             <?php if (mb_enabled('footer_social', true)): ?>
             <div class="social-links flex flex-wrap items-center justify-center gap-3">
-                <?php echo social(); ?>
+                <?php echo mb_render_social('justify-center', 'md'); ?>
             </div>
             <?php endif; ?>
             <div class="text-sm text-zinc-500 dark:text-zinc-400">

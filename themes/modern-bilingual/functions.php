@@ -619,3 +619,257 @@ if (!function_exists('mb_featured_post')) {
         return null;
     }
 }
+
+/* -------------------------------------------------------------------------- */
+/* Brand icons (Simple Icons CC0) + social / share UI                         */
+/* -------------------------------------------------------------------------- */
+
+if (!function_exists('mb_load_brands')) {
+    function mb_load_brands()
+    {
+        static $loaded = false;
+        if (!$loaded) {
+            $file = __DIR__ . '/icons/brands.php';
+            if (file_exists($file)) {
+                include_once $file;
+            }
+            $loaded = true;
+        }
+    }
+}
+
+/**
+ * Render an inline brand SVG (Simple Icons).
+ *
+ * @param string $name Icon slug (x, facebook, telegram, …)
+ * @param string $class Extra CSS classes
+ * @return string
+ */
+if (!function_exists('mb_brand_icon')) {
+    function mb_brand_icon($name, $class = 'mb-brand-icon')
+    {
+        mb_load_brands();
+        if (!function_exists('mb_brand_icons_data')) {
+            return '';
+        }
+        $all = mb_brand_icons_data();
+        $key = strtolower(trim((string)$name));
+        if ($key === 'twitter') {
+            $key = 'x';
+        }
+        if (!isset($all[$key])) {
+            return '';
+        }
+        $icon = $all[$key];
+        $label = htmlspecialchars($icon['label'], ENT_QUOTES, 'UTF-8');
+        $path = $icon['path'];
+        $class = htmlspecialchars($class, ENT_QUOTES, 'UTF-8');
+        return '<svg class="' . $class . '" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'
+            . '<title>' . $label . '</title>'
+            . '<path fill="currentColor" d="' . $path . '"/>'
+            . '</svg>';
+    }
+}
+
+/**
+ * Network definitions: theme setting key, core config key, icon, label.
+ * Theme settings override core config when both are set.
+ */
+if (!function_exists('mb_social_network_defs')) {
+    function mb_social_network_defs()
+    {
+        return array(
+            'x'         => array('theme' => 'social_x',         'core' => 'social.twitter',   'icon' => 'x',         'label' => 'X'),
+            'bluesky'   => array('theme' => 'social_bluesky',   'core' => 'social.bluesky',   'icon' => 'bluesky',   'label' => 'Bluesky'),
+            'facebook'  => array('theme' => 'social_facebook',  'core' => 'social.facebook',  'icon' => 'facebook',  'label' => 'Facebook'),
+            'instagram' => array('theme' => 'social_instagram', 'core' => 'social.instagram', 'icon' => 'instagram', 'label' => 'Instagram'),
+            'linkedin'  => array('theme' => 'social_linkedin',  'core' => 'social.linkedin',  'icon' => 'linkedin',  'label' => 'LinkedIn'),
+            'github'    => array('theme' => 'social_github',    'core' => 'social.github',    'icon' => 'github',    'label' => 'GitHub'),
+            'youtube'   => array('theme' => 'social_youtube',   'core' => 'social.youtube',   'icon' => 'youtube',   'label' => 'YouTube'),
+            'mastodon'  => array('theme' => 'social_mastodon',  'core' => 'social.mastodon',  'icon' => 'mastodon',  'label' => 'Mastodon'),
+            'tiktok'    => array('theme' => 'social_tiktok',    'core' => 'social.tiktok',    'icon' => 'tiktok',    'label' => 'TikTok'),
+            'telegram'  => array('theme' => 'social_telegram',  'core' => null,               'icon' => 'telegram',  'label' => 'Telegram'),
+            'whatsapp'  => array('theme' => 'social_whatsapp',  'core' => null,               'icon' => 'whatsapp',  'label' => 'WhatsApp'),
+            'discord'   => array('theme' => 'social_discord',   'core' => null,               'icon' => 'discord',   'label' => 'Discord'),
+            'threads'   => array('theme' => 'social_threads',   'core' => null,               'icon' => 'threads',   'label' => 'Threads'),
+            'medium'    => array('theme' => 'social_medium',    'core' => null,               'icon' => 'medium',    'label' => 'Medium'),
+            'reddit'    => array('theme' => 'social_reddit',    'core' => null,               'icon' => 'reddit',    'label' => 'Reddit'),
+            'pinterest' => array('theme' => 'social_pinterest', 'core' => null,               'icon' => 'pinterest', 'label' => 'Pinterest'),
+            'dribbble'  => array('theme' => 'social_dribbble',  'core' => null,               'icon' => 'dribbble',  'label' => 'Dribbble'),
+            'behance'   => array('theme' => 'social_behance',   'core' => null,               'icon' => 'behance',   'label' => 'Behance'),
+            'email'     => array('theme' => 'social_email',     'core' => null,               'icon' => 'email',     'label' => 'Email'),
+            'website'   => array('theme' => 'social_website',   'core' => null,               'icon' => 'website',   'label' => 'Website'),
+        );
+    }
+}
+
+/**
+ * Resolved social profile links (theme settings first, then HTMLy core config).
+ *
+ * @return array<int, array{id:string,url:string,icon:string,label:string}>
+ */
+if (!function_exists('mb_social_links')) {
+    function mb_social_links()
+    {
+        $links = array();
+        foreach (mb_social_network_defs() as $id => $def) {
+            $url = trim((string)mb_config($def['theme'], ''));
+            if ($url === '' && !empty($def['core'])) {
+                $url = trim((string)config($def['core']));
+            }
+            if ($url === '') {
+                continue;
+            }
+            if ($id === 'email' && strpos($url, 'mailto:') !== 0 && strpos($url, '@') !== false) {
+                $url = 'mailto:' . $url;
+            }
+            $links[] = array(
+                'id'    => $id,
+                'url'   => $url,
+                'icon'  => $def['icon'],
+                'label' => $def['label'],
+            );
+        }
+        if (mb_enabled('social_show_rss', true)) {
+            $links[] = array(
+                'id'    => 'rss',
+                'url'   => site_url() . 'feed/rss',
+                'icon'  => 'rss',
+                'label' => 'RSS',
+            );
+        }
+        return $links;
+    }
+}
+
+/**
+ * Render social profile icon list (footer / sidebar / navbar).
+ *
+ * @param string $class Wrapper class
+ * @param string $size  sm|md|lg
+ * @return string
+ */
+if (!function_exists('mb_render_social')) {
+    function mb_render_social($class = '', $size = 'md')
+    {
+        $links = mb_social_links();
+        if (empty($links)) {
+            return '';
+        }
+        $sizeClass = array(
+            'sm' => 'h-8 w-8',
+            'md' => 'h-9 w-9',
+            'lg' => 'h-10 w-10',
+        );
+        $box = isset($sizeClass[$size]) ? $sizeClass[$size] : $sizeClass['md'];
+        $iconSize = ($size === 'sm') ? 'h-3.5 w-3.5' : (($size === 'lg') ? 'h-5 w-5' : 'h-4 w-4');
+
+        $html = '<nav class="mb-social-links flex flex-wrap items-center gap-2 ' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '" aria-label="Social links">';
+        foreach ($links as $item) {
+            $url = htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8');
+            $label = htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8');
+            $rel = (strpos($item['url'], 'mailto:') === 0) ? '' : ' rel="me noopener noreferrer"';
+            $target = (strpos($item['url'], 'mailto:') === 0) ? '' : ' target="_blank"';
+            $html .= '<a class="mb-social-btn inline-flex ' . $box . ' items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 transition hover:border-zinc-400 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-white" href="' . $url . '"' . $target . $rel . ' title="' . $label . '" aria-label="' . $label . '">';
+            $html .= mb_brand_icon($item['icon'], 'mb-brand-icon ' . $iconSize);
+            $html .= '</a>';
+        }
+        $html .= '</nav>';
+        return $html;
+    }
+}
+
+/**
+ * Share action definitions for a given URL/title.
+ *
+ * @return array<int, array{id:string,url:string,icon:string,label:string,type:string}>
+ */
+if (!function_exists('mb_share_actions')) {
+    function mb_share_actions($url, $title = '')
+    {
+        $u = rawurlencode($url);
+        $t = rawurlencode(strip_tags((string)$title));
+        $actions = array(
+            array('id' => 'x',        'icon' => 'x',        'label' => 'X',        'type' => 'link', 'url' => 'https://twitter.com/intent/tweet?url=' . $u . '&text=' . $t),
+            array('id' => 'facebook', 'icon' => 'facebook', 'label' => 'Facebook', 'type' => 'link', 'url' => 'https://www.facebook.com/sharer/sharer.php?u=' . $u),
+            array('id' => 'linkedin', 'icon' => 'linkedin', 'label' => 'LinkedIn', 'type' => 'link', 'url' => 'https://www.linkedin.com/sharing/share-offsite/?url=' . $u),
+            array('id' => 'telegram', 'icon' => 'telegram', 'label' => 'Telegram', 'type' => 'link', 'url' => 'https://t.me/share/url?url=' . $u . '&text=' . $t),
+            array('id' => 'whatsapp', 'icon' => 'whatsapp', 'label' => 'WhatsApp', 'type' => 'link', 'url' => 'https://api.whatsapp.com/send?text=' . $t . '%20' . $u),
+            array('id' => 'reddit',   'icon' => 'reddit',   'label' => 'Reddit',   'type' => 'link', 'url' => 'https://www.reddit.com/submit?url=' . $u . '&title=' . $t),
+            array('id' => 'bluesky',  'icon' => 'bluesky',  'label' => 'Bluesky',  'type' => 'link', 'url' => 'https://bsky.app/intent/compose?text=' . $t . '%20' . $u),
+            array('id' => 'email',    'icon' => 'email',    'label' => 'Email',    'type' => 'link', 'url' => 'mailto:?subject=' . $t . '&body=' . $u),
+            array('id' => 'copy',     'icon' => 'copy',     'label' => (mb_lang_code() === 'fa' ? 'کپی لینک' : 'Copy link'), 'type' => 'copy', 'url' => $url),
+        );
+
+        $enabled = mb_config('share_networks', 'x,facebook,linkedin,telegram,whatsapp,reddit,bluesky,email,copy');
+        $enabled = array_filter(array_map('trim', explode(',', strtolower((string)$enabled))));
+        if (empty($enabled)) {
+            return $actions;
+        }
+        $out = array();
+        foreach ($actions as $a) {
+            if (in_array($a['id'], $enabled, true)) {
+                $out[] = $a;
+            }
+        }
+        return $out;
+    }
+}
+
+/**
+ * Render share buttons for a post/page.
+ *
+ * @param object|string $p Post object or URL string
+ * @param string $variant compact|bar
+ * @return string
+ */
+if (!function_exists('mb_share_buttons')) {
+    function mb_share_buttons($p, $variant = 'compact')
+    {
+        if (is_object($p)) {
+            $url = isset($p->url) ? $p->url : site_url();
+            $title = isset($p->title) ? $p->title : '';
+        } else {
+            $url = (string)$p;
+            $title = '';
+        }
+        $actions = mb_share_actions($url, $title);
+        if (empty($actions)) {
+            return '';
+        }
+
+        if ($variant === 'bar') {
+            $html = '<div class="mb-share-bar mt-8 flex flex-wrap items-center gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50">';
+            $html .= '<span class="me-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">' . (mb_lang_code() === 'fa' ? 'اشتراک‌گذاری' : 'Share') . '</span>';
+            foreach ($actions as $a) {
+                $label = htmlspecialchars($a['label'], ENT_QUOTES, 'UTF-8');
+                if ($a['type'] === 'copy') {
+                    $html .= '<button type="button" data-copy-link="' . htmlspecialchars($a['url'], ENT_QUOTES, 'UTF-8') . '" class="mb-share-btn inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-sm ring-1 ring-zinc-200 transition hover:ring-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700">';
+                    $html .= '<i data-lucide="copy" class="h-3.5 w-3.5"></i><span>' . $label . '</span></button>';
+                } else {
+                    $html .= '<a class="mb-share-btn inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-sm ring-1 ring-zinc-200 transition hover:ring-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700" href="' . htmlspecialchars($a['url'], ENT_QUOTES, 'UTF-8') . '" target="_blank" rel="noopener noreferrer" title="' . $label . '" aria-label="' . $label . '">';
+                    $html .= mb_brand_icon($a['icon'], 'mb-brand-icon h-3.5 w-3.5');
+                    $html .= '<span>' . $label . '</span></a>';
+                }
+            }
+            $html .= '</div>';
+            return $html;
+        }
+
+        // compact icon row
+        $html = '<div class="mb-share-compact flex flex-wrap items-center gap-1">';
+        foreach ($actions as $a) {
+            $label = htmlspecialchars($a['label'], ENT_QUOTES, 'UTF-8');
+            if ($a['type'] === 'copy') {
+                $html .= '<button type="button" data-copy-link="' . htmlspecialchars($a['url'], ENT_QUOTES, 'UTF-8') . '" class="mb-share-btn inline-flex h-8 items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800" title="' . $label . '" aria-label="' . $label . '">';
+                $html .= '<i data-lucide="link" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">' . $label . '</span></button>';
+            } else {
+                $html .= '<a class="mb-share-btn inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:bg-zinc-50 hover:text-zinc-900 dark:border-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-100" href="' . htmlspecialchars($a['url'], ENT_QUOTES, 'UTF-8') . '" target="_blank" rel="noopener noreferrer" title="' . $label . '" aria-label="' . $label . '">';
+                $html .= mb_brand_icon($a['icon'], 'mb-brand-icon h-3.5 w-3.5');
+                $html .= '</a>';
+            }
+        }
+        $html .= '</div>';
+        return $html;
+    }
+}

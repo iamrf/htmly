@@ -107,6 +107,7 @@ Path: `themes/modern-bilingual/`
 - Direction from `config('language')` (`fa|ar|he|ur` → RTL) or `text_direction` setting
 - Jalali dates: `mb_date()` via Intl + pure-PHP fallback
 - Helpers prefixed `mb_` in `functions.php`
+- Brand icons: Simple Icons (CC0) in `icons/brands.php` via `mb_brand_icon()` / `mb_render_social()` / `mb_share_buttons()`
 - Referrer param: `referrer_param` setting + `js/app.js` outbound link rewriter
 
 When extending this theme, keep logical Tailwind utilities and `mb_*` naming.

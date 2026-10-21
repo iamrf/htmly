@@ -7,8 +7,8 @@
         <?php echo blog_description(); ?>
     </div>
     <?php if (mb_enabled('footer_social', true)): ?>
-    <div class="social-links mt-4 flex flex-wrap gap-2">
-        <?php echo social('sidebar-social'); ?>
+    <div class="social-links mt-4">
+        <?php echo mb_render_social('sidebar-social', 'sm'); ?>
     </div>
     <?php endif; ?>
 </section>

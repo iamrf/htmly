@@ -50,21 +50,7 @@ $showTags = mb_enabled('post_tag', true);
             </div>
 
             <?php if ($showShare): ?>
-            <div class="flex items-center gap-1">
-                <button type="button" data-copy-link="<?php echo htmlspecialchars($p->url, ENT_QUOTES, 'UTF-8'); ?>" class="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800">
-                    <i data-lucide="link" class="h-3.5 w-3.5"></i>
-                    <span><?php echo mb_lang_code() === 'fa' ? 'کپی لینک' : 'Copy link'; ?></span>
-                </button>
-                <a class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800" target="_blank" rel="noopener" href="https://twitter.com/share?url=<?php echo urlencode($p->url); ?>&text=<?php echo urlencode(strip_tags($p->title)); ?>" aria-label="Share on X">
-                    <i data-lucide="twitter" class="h-3.5 w-3.5"></i>
-                </a>
-                <a class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800" target="_blank" rel="noopener" href="https://www.facebook.com/sharer.php?u=<?php echo urlencode($p->url); ?>" aria-label="Share on Facebook">
-                    <i data-lucide="facebook" class="h-3.5 w-3.5"></i>
-                </a>
-                <a class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($p->url); ?>" aria-label="Share on LinkedIn">
-                    <i data-lucide="linkedin" class="h-3.5 w-3.5"></i>
-                </a>
-            </div>
+                <?php echo mb_share_buttons($p, 'compact'); ?>
             <?php endif; ?>
         </div>
     </header>
@@ -87,14 +73,7 @@ $showTags = mb_enabled('post_tag', true);
             <?php endif; ?>
 
             <?php if ($showShare): ?>
-            <div class="mt-8 flex flex-wrap items-center gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <span class="me-2 text-sm font-medium text-zinc-600 dark:text-zinc-300"><?php echo mb_lang_code() === 'fa' ? 'اشتراک‌گذاری' : 'Share'; ?></span>
-                <button type="button" data-copy-link="<?php echo htmlspecialchars($p->url, ENT_QUOTES, 'UTF-8'); ?>" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-800 dark:ring-zinc-700">
-                    <i data-lucide="copy" class="h-3.5 w-3.5"></i> Copy
-                </button>
-                <a class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-800 dark:ring-zinc-700" target="_blank" rel="noopener" href="https://twitter.com/share?url=<?php echo urlencode($p->url); ?>&text=<?php echo urlencode(strip_tags($p->title)); ?>">X</a>
-                <a class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-800 dark:ring-zinc-700" target="_blank" rel="noopener" href="https://www.facebook.com/sharer.php?u=<?php echo urlencode($p->url); ?>">Facebook</a>
-            </div>
+                <?php echo mb_share_buttons($p, 'bar'); ?>
             <?php endif; ?>
 
             <!-- Author box -->
