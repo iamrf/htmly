@@ -84,9 +84,20 @@ $showSidebar = ($sidebarPos !== 'hidden');
     <header class="<?php echo $stickyNav ? 'sticky top-0 z-40' : 'relative z-40'; ?> border-b border-zinc-200/80 bg-white/80 shadow-sm backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-900/80">
         <div class="mx-auto flex w-full max-w-6xl min-w-0 items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
             <a href="<?php echo site_url(); ?>" class="group flex min-w-0 items-center gap-3">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-sm font-bold text-white transition group-hover:scale-105 dark:bg-zinc-100 dark:text-zinc-900">
-                    <?php echo mb_substr(blog_title(), 0, 1, 'UTF-8'); ?>
-                </span>
+                <?php
+                $navLogo = trim((string)config('default.image'));
+                if ($navLogo === '') {
+                    $navLogo = site_url() . 'system/resources/images/logo-big.png';
+                }
+                ?>
+                <img
+                    class="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-zinc-200/80 shadow-sm transition group-hover:scale-105 dark:ring-zinc-700"
+                    src="<?php echo htmlspecialchars($navLogo, ENT_QUOTES, 'UTF-8'); ?>"
+                    alt="<?php echo htmlspecialchars(blog_title(), ENT_QUOTES, 'UTF-8'); ?>"
+                    width="36"
+                    height="36"
+                    decoding="async"
+                >
                 <span class="min-w-0">
                     <?php if (is_index()): ?>
                     <span class="block truncate text-base font-semibold tracking-tight sm:text-lg"><?php echo blog_title(); ?></span>
