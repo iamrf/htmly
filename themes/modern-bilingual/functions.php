@@ -624,14 +624,14 @@ if (!function_exists('mb_post_media')) {
         } elseif (!empty($p->video)) {
             $vid = get_video_id($p->video);
             if ($teaser) {
-                $html = '<a class="mb-media relative block overflow-hidden rounded-xl" href="' . $url . '"><img class="aspect-[16/10] w-full object-cover" src="//img.youtube.com/vi/' . $vid . '/sddefault.jpg" alt="' . $title . '" loading="lazy"><span class="absolute inset-0 flex items-center justify-center bg-black/30"><i data-lucide="play" class="h-10 w-10 text-white"></i></span></a>';
+                $html = '<a class="mb-media relative block overflow-hidden rounded-xl" href="' . $url . '"><img class="aspect-[16/10] w-full object-cover" src="//img.youtube.com/vi/' . $vid . '/sddefault.jpg" alt="' . $title . '" loading="lazy"><span class="absolute inset-0 flex items-center justify-center bg-black/30">' . mb_icon('play', 'h-10 w-10 text-white') . '</span></a>';
             } else {
                 $html = '<div class="mb-media relative overflow-hidden rounded-2xl" style="padding-top:56.25%"><iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/' . $vid . '" frameborder="0" allowfullscreen loading="lazy"></iframe></div>';
             }
         } elseif (!empty($p->audio)) {
             if ($teaser) {
                 $cover = theme_path() . 'img/audio-cover.svg';
-                $html = '<a class="mb-media relative block overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800" href="' . $url . '"><div class="flex aspect-[16/10] items-center justify-center"><i data-lucide="music" class="h-12 w-12 text-zinc-400"></i></div></a>';
+                $html = '<a class="mb-media relative block overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800" href="' . $url . '"><div class="flex aspect-[16/10] items-center justify-center">' . mb_icon('music', 'h-12 w-12 text-zinc-400') . '</div></a>';
             } else {
                 $html = '<iframe class="mb-media w-full rounded-2xl" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' . htmlspecialchars($p->audio, ENT_QUOTES, 'UTF-8') . '&amp;auto_play=false&amp;visual=true"></iframe>';
             }
@@ -767,7 +767,7 @@ if (!function_exists('mb_render_card')) {
                         <span><?php echo $read; ?></span>
                     </div>
                     <h2 class="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50" itemprop="headline">
-                        <a class="transition hover:text-zinc-600 dark:hover:text-zinc-300" href="<?php echo $url; ?>"<?php echo $target; ?>><?php echo $title; ?><?php if ($external): ?> <i data-lucide="external-link" class="inline h-4 w-4 opacity-50"></i><?php endif; ?></a>
+                        <a class="transition hover:text-zinc-600 dark:hover:text-zinc-300" href="<?php echo $url; ?>"<?php echo $target; ?>><?php echo $title; ?><?php if ($external): ?> <?php echo mb_icon('external-link', 'inline h-4 w-4 opacity-50'); ?><?php endif; ?></a>
                     </h2>
                     <?php if ($excerpt): ?>
                     <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400" itemprop="description"><?php echo $excerpt; ?>…</p>
@@ -796,7 +796,7 @@ if (!function_exists('mb_render_card')) {
                         <time datetime="<?php echo $datetime; ?>" itemprop="datePublished"><?php echo $date; ?></time>
                     </div>
                     <h2 class="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50" itemprop="headline">
-                        <a class="transition hover:text-zinc-600 dark:hover:text-zinc-300" href="<?php echo $url; ?>"<?php echo $target; ?>><?php echo $title; ?><?php if ($external): ?> <i data-lucide="external-link" class="inline h-4 w-4 opacity-50"></i><?php endif; ?></a>
+                        <a class="transition hover:text-zinc-600 dark:hover:text-zinc-300" href="<?php echo $url; ?>"<?php echo $target; ?>><?php echo $title; ?><?php if ($external): ?> <?php echo mb_icon('external-link', 'inline h-4 w-4 opacity-50'); ?><?php endif; ?></a>
                     </h2>
                     <?php if ($excerpt): ?>
                     <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400"><?php echo $excerpt; ?>…</p>
@@ -858,6 +858,20 @@ if (!function_exists('mb_load_brands')) {
     }
 }
 
+if (!function_exists('mb_load_lucide')) {
+    function mb_load_lucide()
+    {
+        static $loaded = false;
+        if (!$loaded) {
+            $file = __DIR__ . '/icons/lucide.php';
+            if (file_exists($file)) {
+                include_once $file;
+            }
+            $loaded = true;
+        }
+    }
+}
+
 /**
  * Render an inline brand SVG (Simple Icons).
  *
@@ -887,6 +901,37 @@ if (!function_exists('mb_brand_icon')) {
         return '<svg class="' . $class . '" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'
             . '<title>' . $label . '</title>'
             . '<path fill="currentColor" d="' . $path . '"/>'
+            . '</svg>';
+    }
+}
+
+/**
+ * Render a local Lucide UI icon (stroke SVG). No CDN / unpkg.
+ *
+ * @param string $name Icon slug (search, moon, arrow-left, …)
+ * @param string $class Extra CSS classes
+ * @return string
+ */
+if (!function_exists('mb_icon')) {
+    function mb_icon($name, $class = 'mb-icon')
+    {
+        mb_load_lucide();
+        if (!function_exists('mb_lucide_icons_data')) {
+            return '';
+        }
+        $all = mb_lucide_icons_data();
+        $key = strtolower(trim((string)$name));
+        if (!isset($all[$key])) {
+            return '';
+        }
+        $icon = $all[$key];
+        $label = htmlspecialchars($icon['label'], ENT_QUOTES, 'UTF-8');
+        $class = trim('mb-icon ' . (string)$class);
+        $class = htmlspecialchars($class, ENT_QUOTES, 'UTF-8');
+        // Inner markup is trusted static SVG from icons/lucide.php
+        return '<svg class="' . $class . '" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-hidden="true" focusable="false">'
+            . '<title>' . $label . '</title>'
+            . $icon['inner']
             . '</svg>';
     }
 }
@@ -1065,7 +1110,7 @@ if (!function_exists('mb_share_buttons')) {
                 $label = htmlspecialchars($a['label'], ENT_QUOTES, 'UTF-8');
                 if ($a['type'] === 'copy') {
                     $html .= '<button type="button" data-copy-link="' . htmlspecialchars($a['url'], ENT_QUOTES, 'UTF-8') . '" class="mb-share-btn inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-sm ring-1 ring-zinc-200 transition hover:ring-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700">';
-                    $html .= '<i data-lucide="copy" class="h-3.5 w-3.5"></i><span>' . $label . '</span></button>';
+                    $html .= '' . mb_icon('copy', 'h-3.5 w-3.5') . '<span>' . $label . '</span></button>';
                 } else {
                     $html .= '<a class="mb-share-btn inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-sm ring-1 ring-zinc-200 transition hover:ring-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700" href="' . htmlspecialchars($a['url'], ENT_QUOTES, 'UTF-8') . '" target="_blank" rel="noopener noreferrer" title="' . $label . '" aria-label="' . $label . '">';
                     $html .= mb_brand_icon($a['icon'], 'mb-brand-icon h-3.5 w-3.5');
@@ -1082,7 +1127,7 @@ if (!function_exists('mb_share_buttons')) {
             $label = htmlspecialchars($a['label'], ENT_QUOTES, 'UTF-8');
             if ($a['type'] === 'copy') {
                 $html .= '<button type="button" data-copy-link="' . htmlspecialchars($a['url'], ENT_QUOTES, 'UTF-8') . '" class="mb-share-btn inline-flex h-8 items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800" title="' . $label . '" aria-label="' . $label . '">';
-                $html .= '<i data-lucide="link" class="h-3.5 w-3.5"></i><span class="hidden sm:inline">' . $label . '</span></button>';
+                $html .= '' . mb_icon('link', 'h-3.5 w-3.5') . '<span class="hidden sm:inline">' . $label . '</span></button>';
             } else {
                 $html .= '<a class="mb-share-btn inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:bg-zinc-50 hover:text-zinc-900 dark:border-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-100" href="' . htmlspecialchars($a['url'], ENT_QUOTES, 'UTF-8') . '" target="_blank" rel="noopener noreferrer" title="' . $label . '" aria-label="' . $label . '">';
                 $html .= mb_brand_icon($a['icon'], 'mb-brand-icon h-3.5 w-3.5');
@@ -1266,7 +1311,7 @@ if (!function_exists('mb_comment_form')) {
             </button>
             <?php endif; ?>
             <button type="submit" class="mb-cform__btn mb-cform__btn--primary">
-                <i data-lucide="<?php echo $isReply ? 'corner-down-left' : 'send'; ?>" class="h-4 w-4" aria-hidden="true"></i>
+                <?php echo mb_icon($isReply ? 'corner-down-left' : 'send', 'h-4 w-4'); ?>
                 <span><?php echo htmlspecialchars($submitLabel, ENT_QUOTES, 'UTF-8'); ?></span>
             </button>
         </div>
@@ -1326,7 +1371,7 @@ if (!function_exists('mb_render_comment')) {
                         data-mb-reply="<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>"
                         aria-expanded="false"
                         aria-controls="mb-reply-slot-<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>">
-                    <i data-lucide="reply" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                    <?php echo mb_icon('reply', 'h-3.5 w-3.5'); ?>
                     <span><?php echo htmlspecialchars($replyLabel, ENT_QUOTES, 'UTF-8'); ?></span>
                 </button>
             </footer>

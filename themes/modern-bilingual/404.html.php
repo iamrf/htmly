@@ -17,12 +17,12 @@
     <form role="search" class="mx-auto mt-8 flex max-w-md overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-900" action="<?php echo site_url(); ?>" method="get">
         <input type="search" name="search" class="h-12 flex-1 bg-transparent px-4 text-sm focus:outline-none" placeholder="<?php echo i18n('type_to_search'); ?>" autocomplete="off">
         <button type="submit" class="bg-zinc-900 px-4 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-            <i data-lucide="search" class="h-4 w-4"></i>
+            <?php echo mb_icon('search', 'h-4 w-4'); ?>
         </button>
     </form>
 
     <a href="<?php echo site_url(); ?>" class="mt-8 inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white">
-        <i data-lucide="home" class="h-4 w-4"></i>
+        <?php echo mb_icon('home', 'h-4 w-4'); ?>
         <?php echo mb_lang_code() === 'fa' ? 'صفحهٔ نخست' : 'Back to homepage'; ?>
     </a>
 </section>

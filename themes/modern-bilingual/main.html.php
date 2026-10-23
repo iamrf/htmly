@@ -41,7 +41,7 @@ if ($isFront && $page <= 1) {
     <form role="search" class="mt-8 flex max-w-md overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-900" action="<?php echo site_url(); ?>" method="get">
         <input type="search" name="search" class="h-12 flex-1 bg-transparent px-4 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none dark:text-zinc-100" placeholder="<?php echo i18n('type_to_search'); ?>" autocomplete="off">
         <button type="submit" class="inline-flex items-center gap-2 bg-zinc-900 px-4 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white">
-            <i data-lucide="search" class="h-4 w-4"></i>
+            <?php echo mb_icon('search', 'h-4 w-4'); ?>
             <span class="hidden sm:inline"><?php echo mb_lang_code() === 'fa' ? 'جستجو' : 'Search'; ?></span>
         </button>
     </form>
@@ -55,7 +55,7 @@ if ($isFront && $page <= 1) {
         <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl"><?php echo $taxonomy->title; ?></h1>
         <?php if (!empty($taxonomy->rss)): ?>
         <a class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-orange-500 dark:hover:bg-zinc-800" href="<?php echo $taxonomy->rss; ?>" aria-label="RSS" title="RSS">
-            <i data-lucide="rss" class="h-4 w-4"></i>
+            <?php echo mb_icon('rss', 'h-4 w-4'); ?>
         </a>
         <?php endif; ?>
     </div>
@@ -106,7 +106,7 @@ if ($isFront && $page <= 1) {
                 <a class="text-sm font-medium" href="<?php echo $featured->authorUrl; ?>"><?php echo $featured->authorName; ?></a>
                 <a class="ms-auto inline-flex items-center gap-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100" href="<?php echo $fUrl; ?>">
                     <?php echo $readMore ? $readMore : (mb_lang_code() === 'fa' ? 'ادامه مطلب' : 'Read more'); ?>
-                    <i data-lucide="arrow-right" class="h-4 w-4 rtl:rotate-180"></i>
+                    <?php echo mb_icon('arrow-right', 'h-4 w-4 rtl:rotate-180'); ?>
                 </a>
             </div>
         </div>
@@ -142,7 +142,7 @@ if ($isFront && $page <= 1) {
 <nav class="mb-pagination mt-12 flex items-center justify-between border-t border-zinc-200 pt-8 dark:border-zinc-800" aria-label="Pagination">
     <?php if (!empty($pagination['prev'])): ?>
     <a rel="next" href="?page=<?php echo $page - 1; ?>">
-        <i data-lucide="arrow-left" class="h-4 w-4 rtl:rotate-180"></i>
+        <?php echo mb_icon('arrow-left', 'h-4 w-4 rtl:rotate-180'); ?>
         <?php echo i18n('next'); ?>
     </a>
     <?php else: ?>
@@ -156,7 +156,7 @@ if ($isFront && $page <= 1) {
     <?php if (!empty($pagination['next'])): ?>
     <a rel="prev" href="?page=<?php echo $page + 1; ?>">
         <?php echo i18n('prev'); ?>
-        <i data-lucide="arrow-right" class="h-4 w-4 rtl:rotate-180"></i>
+        <?php echo mb_icon('arrow-right', 'h-4 w-4 rtl:rotate-180'); ?>
     </a>
     <?php else: ?>
     <span class="is-disabled"><?php echo i18n('prev'); ?></span>

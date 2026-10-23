@@ -43,7 +43,6 @@
     var next = resolved === 'dark' ? 'light' : 'dark';
     setStoredTheme(next);
     applyTheme(next);
-    if (window.lucide) lucide.createIcons();
   }
 
   var themeToggle = document.getElementById('theme-toggle');
@@ -225,11 +224,10 @@
   function flashCopy(btn) {
     var original = btn.getAttribute('data-label') || btn.innerHTML;
     btn.setAttribute('data-label', original);
-    btn.innerHTML = '<i data-lucide="check" class="h-4 w-4"></i> <span>Copied</span>';
-    if (window.lucide) lucide.createIcons();
+    var icon = (typeof mbIcon === 'function') ? mbIcon('check', 'h-4 w-4') : '';
+    btn.innerHTML = icon + ' <span>Copied</span>';
     setTimeout(function () {
       btn.innerHTML = original;
-      if (window.lucide) lucide.createIcons();
     }, 1600);
   }
 
@@ -300,10 +298,6 @@
       });
     }
 
-    function refreshIcons() {
-      if (window.lucide) lucide.createIcons();
-    }
-
     function closeAllReplies() {
       rootEl.querySelectorAll('.mb-comment__reply-slot').forEach(function (slot) {
         slot.hidden = true;
@@ -357,7 +351,6 @@
       trigger.setAttribute('aria-expanded', 'true');
 
       stampAntispam(slot);
-      refreshIcons();
 
       var focusEl = slot.querySelector('textarea');
       if (focusEl) {
@@ -410,9 +403,4 @@
     showStatusFromHash();
     window.addEventListener('hashchange', showStatusFromHash);
   })();
-
-  /* ---------- Re-init Lucide after DOM tweaks ---------- */
-  if (window.lucide) {
-    lucide.createIcons();
-  }
 })();

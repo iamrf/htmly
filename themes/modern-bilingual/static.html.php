@@ -27,14 +27,14 @@ if (!$page) {
     <nav class="mt-12 flex items-center justify-between border-t border-zinc-200 pt-8 dark:border-zinc-800">
         <?php if (!empty($next)): ?>
         <a class="inline-flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100" href="<?php echo $next['url']; ?>" rel="next">
-            <i data-lucide="arrow-left" class="h-4 w-4 rtl:rotate-180"></i>
+            <?php echo mb_icon('arrow-left', 'h-4 w-4 rtl:rotate-180'); ?>
             <?php echo $next['title']; ?>
         </a>
         <?php else: ?><span></span><?php endif; ?>
         <?php if (!empty($prev)): ?>
         <a class="inline-flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100" href="<?php echo $prev['url']; ?>" rel="prev">
             <?php echo $prev['title']; ?>
-            <i data-lucide="arrow-right" class="h-4 w-4 rtl:rotate-180"></i>
+            <?php echo mb_icon('arrow-right', 'h-4 w-4 rtl:rotate-180'); ?>
         </a>
         <?php endif; ?>
     </nav>

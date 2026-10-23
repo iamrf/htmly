@@ -27,7 +27,7 @@ $writeCta = $fa ? 'نوشتن دیدگاه' : 'Write a comment';
     <header class="mb-comments__header">
         <div class="mb-comments__title-row">
             <h2 id="mb-comments-heading" class="mb-comments__title">
-                <i data-lucide="messages-square" class="mb-comments__title-icon" aria-hidden="true"></i>
+                <?php echo mb_icon('messages-square', 'mb-comments__title-icon'); ?>
                 <?php echo i18n('Comments'); ?>
             </h2>
             <?php if ($count > 0): ?>
@@ -50,7 +50,7 @@ $writeCta = $fa ? 'نوشتن دیدگاه' : 'Write a comment';
     <?php else: ?>
     <div class="mb-comments__empty">
         <div class="mb-comments__empty-icon" aria-hidden="true">
-            <i data-lucide="message-circle" class="h-6 w-6"></i>
+            <?php echo mb_icon('message-circle', 'h-6 w-6'); ?>
         </div>
         <p class="mb-comments__empty-title"><?php echo htmlspecialchars($emptyTitle, ENT_QUOTES, 'UTF-8'); ?></p>
         <p class="mb-comments__empty-hint"><?php echo htmlspecialchars($emptyHint, ENT_QUOTES, 'UTF-8'); ?></p>

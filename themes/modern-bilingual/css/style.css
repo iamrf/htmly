@@ -959,10 +959,15 @@ body.admin-bar .sticky {
   outline-offset: 2px;
 }
 
-[dir="rtl"] .mb-comment__reply [data-lucide="reply"],
-[dir="rtl"] .mb-cform__btn [data-lucide="reply"],
-[dir="rtl"] .mb-cform__btn [data-lucide="corner-down-left"],
-[dir="rtl"] .mb-cform__btn [data-lucide="send"] {
+/* Local Lucide SVGs */
+.mb-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+[dir="rtl"] .mb-comment__reply .mb-icon,
+[dir="rtl"] .mb-cform__btn .mb-icon {
   transform: scaleX(-1);
 }
 

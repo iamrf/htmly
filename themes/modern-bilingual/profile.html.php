@@ -49,7 +49,7 @@ $page = isset($page) ? (int)$page : 1;
     <nav class="mb-pagination mt-12 flex items-center justify-between border-t border-zinc-200 pt-8 dark:border-zinc-800" aria-label="Pagination">
         <?php if (!empty($pagination['prev'])): ?>
         <a rel="next" href="?page=<?php echo $page - 1; ?>">
-            <i data-lucide="arrow-left" class="h-4 w-4 rtl:rotate-180"></i>
+            <?php echo mb_icon('arrow-left', 'h-4 w-4 rtl:rotate-180'); ?>
             <?php echo i18n('next'); ?>
         </a>
         <?php else: ?>
@@ -61,7 +61,7 @@ $page = isset($page) ? (int)$page : 1;
         <?php if (!empty($pagination['next'])): ?>
         <a rel="prev" href="?page=<?php echo $page + 1; ?>">
             <?php echo i18n('prev'); ?>
-            <i data-lucide="arrow-right" class="h-4 w-4 rtl:rotate-180"></i>
+            <?php echo mb_icon('arrow-right', 'h-4 w-4 rtl:rotate-180'); ?>
         </a>
         <?php else: ?>
         <span class="is-disabled"><?php echo i18n('prev'); ?></span>

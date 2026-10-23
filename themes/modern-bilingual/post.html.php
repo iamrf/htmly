@@ -34,7 +34,7 @@ $tocInline = $showToc && !$tocAside;
         <?php if (!empty($p->link)): ?>
         <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl md:text-5xl" itemprop="headline">
             <a href="<?php echo $p->link; ?>" target="_blank" rel="noopener"><?php echo $p->title; ?>
-                <i data-lucide="external-link" class="inline h-6 w-6 opacity-40"></i>
+                <?php echo mb_icon('external-link', 'inline h-6 w-6 opacity-40'); ?>
             </a>
         </h1>
         <?php else: ?>
@@ -106,7 +106,7 @@ $tocInline = $showToc && !$tocAside;
                 <?php if (!empty($next)): ?>
                 <a class="group rounded-2xl border border-zinc-200 bg-white p-5 transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600" href="<?php echo $next['url']; ?>" rel="next">
                     <p class="mb-1 flex items-center gap-1 text-xs font-medium text-zinc-400">
-                        <i data-lucide="arrow-left" class="h-3.5 w-3.5 rtl:rotate-180"></i>
+                        <?php echo mb_icon('arrow-left', 'h-3.5 w-3.5 rtl:rotate-180'); ?>
                         <?php echo i18n('Next'); ?>
                     </p>
                     <p class="font-semibold text-zinc-900 group-hover:underline dark:text-zinc-100"><?php echo $next['title']; ?></p>
@@ -118,7 +118,7 @@ $tocInline = $showToc && !$tocAside;
                 <a class="group rounded-2xl border border-zinc-200 bg-white p-5 text-end transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600" href="<?php echo $prev['url']; ?>" rel="prev">
                     <p class="mb-1 flex items-center justify-end gap-1 text-xs font-medium text-zinc-400">
                         <?php echo i18n('Prev'); ?>
-                        <i data-lucide="arrow-right" class="h-3.5 w-3.5 rtl:rotate-180"></i>
+                        <?php echo mb_icon('arrow-right', 'h-3.5 w-3.5 rtl:rotate-180'); ?>
                     </p>
                     <p class="font-semibold text-zinc-900 group-hover:underline dark:text-zinc-100"><?php echo $prev['title']; ?></p>
                 </a>

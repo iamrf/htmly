@@ -132,12 +132,12 @@ $showSidebar = ($sidebarPos !== 'hidden');
                     ?>
                 </div>
                 <button type="button" class="search-open inline-flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100" aria-label="Search" title="Search (Ctrl/Cmd+K)">
-                    <i data-lucide="search" class="h-4 w-4"></i>
+                    <?php echo mb_icon('search', 'h-4 w-4'); ?>
                 </button>
 
                 <button type="button" id="theme-toggle" class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100" aria-label="Toggle theme">
-                    <i data-lucide="sun" class="theme-icon-sun hidden h-4 w-4 dark:block"></i>
-                    <i data-lucide="moon" class="theme-icon-moon block h-4 w-4 dark:hidden"></i>
+                    <?php echo mb_icon('sun', 'theme-icon-sun hidden h-4 w-4 dark:block'); ?>
+                    <?php echo mb_icon('moon', 'theme-icon-moon block h-4 w-4 dark:hidden'); ?>
                 </button>
 
                 <?php if (!empty($cta['enabled'])): ?>
@@ -152,7 +152,7 @@ $showSidebar = ($sidebarPos !== 'hidden');
                 <?php endif; ?>
 
                 <button type="button" class="menu-open inline-flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 lg:hidden" aria-label="Open menu" id="menu-toggle">
-                    <i data-lucide="menu" class="h-5 w-5"></i>
+                    <?php echo mb_icon('menu', 'h-5 w-5'); ?>
                 </button>
             </div>
         </div>
@@ -165,7 +165,7 @@ $showSidebar = ($sidebarPos !== 'hidden');
             <div class="flex items-center justify-between border-b border-zinc-200 px-5 py-4 dark:border-zinc-800">
                 <span class="font-semibold"><?php echo blog_title(); ?></span>
                 <button type="button" class="menu-close inline-flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800" aria-label="Close menu" data-drawer-close>
-                    <i data-lucide="x" class="h-5 w-5"></i>
+                    <?php echo mb_icon('x', 'h-5 w-5'); ?>
                 </button>
             </div>
             <nav class="nav-mobile flex-1 overflow-y-auto px-5 py-6" aria-label="Mobile">
@@ -223,13 +223,13 @@ $showSidebar = ($sidebarPos !== 'hidden');
 <div class="search-modal fixed inset-0 z-50 hidden items-start justify-center bg-zinc-950/50 p-4 pt-[15vh] backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Search">
     <div class="w-full max-w-lg overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
         <div class="flex items-center gap-3 border-b border-zinc-100 px-4 py-3 dark:border-zinc-800">
-            <i data-lucide="search" class="h-5 w-5 shrink-0 text-zinc-400"></i>
+            <?php echo mb_icon('search', 'h-5 w-5 shrink-0 text-zinc-400'); ?>
             <form role="search" class="w-full" action="<?php echo site_url(); ?>" method="get">
                 <input name="search" type="search" class="h-10 w-full bg-transparent text-zinc-900 placeholder:text-zinc-400 focus:outline-none dark:text-zinc-100" placeholder="<?php echo i18n('type_to_search'); ?>" autocomplete="off" data-search-input>
             </form>
             <kbd class="hidden rounded border border-zinc-200 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400 dark:border-zinc-700 sm:inline">ESC</kbd>
             <button type="button" class="search-close shrink-0 rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800" aria-label="Close">
-                <i data-lucide="x" class="h-4 w-4"></i>
+                <?php echo mb_icon('x', 'h-4 w-4'); ?>
             </button>
         </div>
         <p class="px-4 py-3 text-xs text-zinc-400">Press <kbd class="rounded bg-zinc-100 px-1 dark:bg-zinc-800">⌘</kbd>/<kbd class="rounded bg-zinc-100 px-1 dark:bg-zinc-800">Ctrl</kbd>+<kbd class="rounded bg-zinc-100 px-1 dark:bg-zinc-800">K</kbd> to open search</p>
@@ -237,12 +237,11 @@ $showSidebar = ($sidebarPos !== 'hidden');
 </div>
 
 <button type="button" id="scroll-top" class="fixed bottom-6 z-30 hidden h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white shadow-lg transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white end-6" aria-label="Back to top">
-    <i data-lucide="arrow-up" class="h-4 w-4"></i>
+    <?php echo mb_icon('arrow-up', 'h-4 w-4'); ?>
 </button>
 
-<script src="https://unpkg.com/lucide@latest"></script>
+<script src="<?php echo mb_asset('js/icons.js'); ?>"></script>
 <script src="<?php echo mb_asset('js/app.js'); ?>"></script>
-<script>if (window.lucide) lucide.createIcons();</script>
 <?php if (analytics()): ?><?php echo analytics(); ?><?php endif; ?>
 </body>
 </html>

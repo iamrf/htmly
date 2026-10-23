@@ -20,7 +20,7 @@ $tagObj = isset($tag) ? $tag : (isset($taxonomy) ? $taxonomy : null);
         </h1>
         <?php if ($tagObj && !empty($tagObj->url)): ?>
         <a class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-orange-500 dark:hover:bg-zinc-800" href="<?php echo $tagObj->url; ?>/feed" aria-label="RSS">
-            <i data-lucide="rss" class="h-4 w-4"></i>
+            <?php echo mb_icon('rss', 'h-4 w-4'); ?>
         </a>
         <?php endif; ?>
     </div>
@@ -44,11 +44,11 @@ $tagObj = isset($tag) ? $tag : (isset($taxonomy) ? $taxonomy : null);
     <?php if (!empty($pagination['prev']) || !empty($pagination['next'])): ?>
     <nav class="mb-pagination mt-12 flex items-center justify-between border-t border-zinc-200 pt-8 dark:border-zinc-800">
         <?php if (!empty($pagination['prev'])): ?>
-        <a rel="next" href="?page=<?php echo $page - 1; ?>"><i data-lucide="arrow-left" class="h-4 w-4 rtl:rotate-180"></i> <?php echo i18n('next'); ?></a>
+        <a rel="next" href="?page=<?php echo $page - 1; ?>"><?php echo mb_icon('arrow-left', 'h-4 w-4 rtl:rotate-180'); ?> <?php echo i18n('next'); ?></a>
         <?php else: ?><span class="is-disabled"><?php echo i18n('next'); ?></span><?php endif; ?>
         <?php if (!empty($pagination['pagenum'])): ?><span class="text-sm text-zinc-500"><?php echo mb_digits($pagination['pagenum']); ?></span><?php endif; ?>
         <?php if (!empty($pagination['next'])): ?>
-        <a rel="prev" href="?page=<?php echo $page + 1; ?>"><?php echo i18n('prev'); ?> <i data-lucide="arrow-right" class="h-4 w-4 rtl:rotate-180"></i></a>
+        <a rel="prev" href="?page=<?php echo $page + 1; ?>"><?php echo i18n('prev'); ?> <?php echo mb_icon('arrow-right', 'h-4 w-4 rtl:rotate-180'); ?></a>
         <?php else: ?><span class="is-disabled"><?php echo i18n('prev'); ?></span><?php endif; ?>
     </nav>
     <?php endif; ?>

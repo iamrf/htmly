@@ -32,7 +32,7 @@ $count = ($searchObj && !empty($searchObj->count)) ? $searchObj->count : (!empty
     <form role="search" class="mt-6 flex max-w-md overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-900" action="<?php echo site_url(); ?>" method="get">
         <input type="search" name="search" value="<?php echo htmlspecialchars((string)$searchTitle, ENT_QUOTES, 'UTF-8'); ?>" class="h-11 flex-1 bg-transparent px-4 text-sm focus:outline-none" placeholder="<?php echo i18n('type_to_search'); ?>" autocomplete="off">
         <button type="submit" class="bg-zinc-900 px-4 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
-            <i data-lucide="search" class="h-4 w-4"></i>
+            <?php echo mb_icon('search', 'h-4 w-4'); ?>
         </button>
     </form>
 </header>
@@ -49,11 +49,11 @@ $count = ($searchObj && !empty($searchObj->count)) ? $searchObj->count : (!empty
     <?php if (!empty($pagination['prev']) || !empty($pagination['next'])): ?>
     <nav class="mb-pagination mt-12 flex items-center justify-between border-t border-zinc-200 pt-8 dark:border-zinc-800">
         <?php if (!empty($pagination['prev'])): ?>
-        <a rel="next" href="?page=<?php echo $page - 1; ?>"><i data-lucide="arrow-left" class="h-4 w-4 rtl:rotate-180"></i> <?php echo i18n('next'); ?></a>
+        <a rel="next" href="?page=<?php echo $page - 1; ?>"><?php echo mb_icon('arrow-left', 'h-4 w-4 rtl:rotate-180'); ?> <?php echo i18n('next'); ?></a>
         <?php else: ?><span class="is-disabled"><?php echo i18n('next'); ?></span><?php endif; ?>
         <?php if (!empty($pagination['pagenum'])): ?><span class="text-sm text-zinc-500"><?php echo mb_digits($pagination['pagenum']); ?></span><?php endif; ?>
         <?php if (!empty($pagination['next'])): ?>
-        <a rel="prev" href="?page=<?php echo $page + 1; ?>"><?php echo i18n('prev'); ?> <i data-lucide="arrow-right" class="h-4 w-4 rtl:rotate-180"></i></a>
+        <a rel="prev" href="?page=<?php echo $page + 1; ?>"><?php echo i18n('prev'); ?> <?php echo mb_icon('arrow-right', 'h-4 w-4 rtl:rotate-180'); ?></a>
         <?php else: ?><span class="is-disabled"><?php echo i18n('prev'); ?></span><?php endif; ?>
     </nav>
     <?php endif; ?>

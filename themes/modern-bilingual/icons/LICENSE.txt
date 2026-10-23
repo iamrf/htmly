@@ -5,3 +5,13 @@ Simple Icons is dedicated to the public domain under the CC0 1.0 Universal licen
 https://creativecommons.org/publicdomain/zero/1.0/
 
 Project: https://github.com/simple-icons/simple-icons
+
+---
+
+UI icon markup in lucide.php is a local subset of Lucide Icons
+https://lucide.dev/
+
+Lucide is licensed under the ISC License:
+https://github.com/lucide-icons/lucide/blob/main/LICENSE
+
+Copyright (c) for portions of Lucide are held by Lucide Contributors 2022–present.
