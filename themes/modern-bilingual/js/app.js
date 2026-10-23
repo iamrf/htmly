@@ -273,6 +273,141 @@
     });
   }
 
+  /* ---------- Local comments ---------- */
+  (function initComments() {
+    var rootEl = document.getElementById('comments');
+    if (!rootEl || !rootEl.classList.contains('mb-comments')) return;
+
+    var messages = {
+      comment_submission_success: rootEl.getAttribute('data-msg-success') || 'Your comment has been posted successfully!',
+      comment_submission_moderation: rootEl.getAttribute('data-msg-moderation') || 'Your comment has been submitted and is awaiting moderation.',
+      comment_submission_error: rootEl.getAttribute('data-msg-error') || 'There was an error submitting your comment. Please try again.',
+      comment_submission_error_shortname: rootEl.getAttribute('data-msg-shortname') || 'Name is required and must be at least 2 characters.',
+      comment_submission_error_email: rootEl.getAttribute('data-msg-email') || 'Valid email is required.',
+      comment_submission_error_short: rootEl.getAttribute('data-msg-short') || 'Comment is required and must be at least 3 characters.',
+      comment_submission_error_spam: rootEl.getAttribute('data-msg-spam') || 'SPAM detected!'
+    };
+
+    function stampAntispam(scope) {
+      var ts = Math.floor(Date.now() / 1000);
+      (scope || document).querySelectorAll('[data-mb-antispam], [name="company"]').forEach(function (field) {
+        if (field.closest && field.closest('.mb-comments, #comments')) {
+          field.value = String(ts);
+        }
+      });
+    }
+
+    function refreshIcons() {
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeAllReplies() {
+      rootEl.querySelectorAll('.mb-comment__reply-slot').forEach(function (slot) {
+        slot.hidden = true;
+        slot.innerHTML = '';
+      });
+      rootEl.querySelectorAll('[data-mb-reply]').forEach(function (btn) {
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function showReply(commentId, trigger) {
+      var slot = document.getElementById('mb-reply-slot-' + commentId);
+      var template = document.getElementById('mb-reply-form-template');
+      if (!slot || !template) return;
+
+      var alreadyOpen = trigger.getAttribute('aria-expanded') === 'true';
+      closeAllReplies();
+      if (alreadyOpen) return;
+
+      var urlpath = rootEl.getAttribute('data-comments-url') || '';
+      var frag = template.content.cloneNode(true);
+      var form = frag.querySelector('form');
+      if (!form) return;
+
+      var uid = 'mb-reply-' + commentId.replace(/[^a-zA-Z0-9_\-.]/g, '');
+      form.id = uid;
+
+      var urlInput = form.querySelector('[name="url"]');
+      var parentInput = form.querySelector('[name="parent_id"]');
+      if (urlInput) urlInput.value = urlpath;
+      if (parentInput) parentInput.value = commentId;
+
+      form.querySelectorAll('[id]').forEach(function (el) {
+        var oldId = el.id;
+        var nextId = oldId.replace(/mb-reply-form-__PARENT__/g, uid).replace(/__PARENT__/g, commentId);
+        el.id = nextId;
+        form.querySelectorAll('label[for="' + oldId + '"]').forEach(function (lab) {
+          lab.setAttribute('for', nextId);
+        });
+      });
+
+      var titleText = slot.getAttribute('data-reply-title') || '';
+      if (titleText) {
+        var title = document.createElement('p');
+        title.className = 'mb-comment__reply-slot-title';
+        title.textContent = titleText;
+        slot.appendChild(title);
+      }
+      slot.appendChild(frag);
+      slot.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+
+      stampAntispam(slot);
+      refreshIcons();
+
+      var focusEl = slot.querySelector('textarea');
+      if (focusEl) {
+        try { focusEl.focus(); } catch (e) { /* ignore */ }
+      }
+    }
+
+    rootEl.addEventListener('click', function (e) {
+      var replyBtn = e.target.closest('[data-mb-reply]');
+      if (replyBtn && rootEl.contains(replyBtn)) {
+        e.preventDefault();
+        showReply(replyBtn.getAttribute('data-mb-reply'), replyBtn);
+        return;
+      }
+      var cancelBtn = e.target.closest('[data-mb-cancel-reply]');
+      if (cancelBtn && rootEl.contains(cancelBtn)) {
+        e.preventDefault();
+        closeAllReplies();
+      }
+    });
+
+    function showStatusFromHash() {
+      var hash = window.location.hash || '';
+      if (hash.indexOf('#comment-status') !== 0) return;
+      var parts = hash.split('+');
+      if (parts.length < 2) return;
+      var key = decodeURIComponent(parts[1]);
+      var alertEl = document.getElementById('mb-comment-alert');
+      if (!alertEl || !messages[key]) return;
+
+      alertEl.hidden = false;
+      alertEl.textContent = messages[key];
+      alertEl.className = 'mb-comments__alert';
+      if (key.indexOf('error') !== -1) {
+        alertEl.classList.add('mb-comments__alert--error');
+      } else if (key.indexOf('success') !== -1) {
+        alertEl.classList.add('mb-comments__alert--success');
+      } else if (key.indexOf('moderation') !== -1) {
+        alertEl.classList.add('mb-comments__alert--warning');
+      }
+
+      try {
+        rootEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        rootEl.scrollIntoView(true);
+      }
+    }
+
+    stampAntispam(rootEl);
+    showStatusFromHash();
+    window.addEventListener('hashchange', showStatusFromHash);
+  })();
+
   /* ---------- Re-init Lucide after DOM tweaks ---------- */
   if (window.lucide) {
     lucide.createIcons();

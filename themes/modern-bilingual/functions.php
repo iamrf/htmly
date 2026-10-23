@@ -1076,3 +1076,271 @@ if (!function_exists('mb_share_buttons')) {
         return $html;
     }
 }
+
+/**
+ * Initials for comment avatar (1–2 chars, Unicode-safe).
+ */
+if (!function_exists('mb_comment_initials')) {
+    function mb_comment_initials($name)
+    {
+        $name = trim((string)$name);
+        if ($name === '') {
+            return '?';
+        }
+        $parts = preg_split('/\s+/u', $name, -1, PREG_SPLIT_NO_EMPTY);
+        if (!is_array($parts) || empty($parts)) {
+            return '?';
+        }
+        $first = $parts[0];
+        $second = (count($parts) > 1) ? $parts[count($parts) - 1] : '';
+        $a = function_exists('mb_substr') ? mb_substr($first, 0, 1, 'UTF-8') : substr($first, 0, 1);
+        $b = $second !== ''
+            ? (function_exists('mb_substr') ? mb_substr($second, 0, 1, 'UTF-8') : substr($second, 0, 1))
+            : '';
+        if (function_exists('mb_strtoupper')) {
+            return mb_strtoupper($a . $b, 'UTF-8');
+        }
+        return strtoupper($a . $b);
+    }
+}
+
+/**
+ * Deterministic avatar tone class from author name.
+ */
+if (!function_exists('mb_comment_avatar_tone')) {
+    function mb_comment_avatar_tone($name)
+    {
+        $tones = array('tone-1', 'tone-2', 'tone-3', 'tone-4', 'tone-5', 'tone-6');
+        $hash = sprintf('%u', crc32((string)$name));
+        return $tones[(int)$hash % count($tones)];
+    }
+}
+
+/**
+ * Relative-friendly comment date (Jalali-aware via mb_date).
+ */
+if (!function_exists('mb_comment_date')) {
+    function mb_comment_date($timestamp)
+    {
+        if (!is_numeric($timestamp)) {
+            $timestamp = strtotime($timestamp);
+        }
+        if (empty($timestamp)) {
+            return '';
+        }
+        return mb_date($timestamp, 'long');
+    }
+}
+
+/**
+ * Comment form markup (main composer or reply). Compatible with POST /comments/submit.
+ *
+ * @param string $urlpath Post URL path (no leading slash preferred)
+ * @param string|null $parentId Parent comment id for replies
+ * @return string
+ */
+if (!function_exists('mb_comment_form')) {
+    function mb_comment_form($urlpath, $parentId = null)
+    {
+        $isReply = !empty($parentId);
+        $formId = $isReply ? 'mb-reply-form-' . preg_replace('/[^a-zA-Z0-9_\-.]/', '', (string)$parentId) : 'mb-comment-form';
+        $submitUrl = site_url() . 'comments/submit';
+        $fa = (mb_lang_code() === 'fa');
+
+        $nameLabel = i18n('Name');
+        $emailLabel = i18n('Email');
+        $commentLabel = i18n('Comment');
+        $emailHint = i18n('Email_not_published');
+        $formatHint = i18n('Comment_formatting_help');
+        $notifyLabel = i18n('Notify_new_comments');
+        $submitLabel = $isReply ? i18n('Post_Reply') : i18n('Post_Comment');
+        $cancelLabel = i18n('Cancel');
+        $placeholder = $fa ? 'دیدگاه خود را بنویسید…' : 'Write your comment…';
+
+        ob_start();
+        ?>
+<form id="<?php echo htmlspecialchars($formId, ENT_QUOTES, 'UTF-8'); ?>"
+      class="mb-cform<?php echo $isReply ? ' mb-cform--reply' : ''; ?>"
+      method="POST"
+      action="<?php echo htmlspecialchars($submitUrl, ENT_QUOTES, 'UTF-8'); ?>"
+      novalidate>
+    <input type="hidden" name="url" value="<?php echo htmlspecialchars($urlpath, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php if ($isReply): ?>
+    <input type="hidden" name="parent_id" value="<?php echo htmlspecialchars((string)$parentId, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
+
+    <div class="mb-cform__honeypot" aria-hidden="true">
+        <label><?php echo $fa ? 'وب‌سایت' : 'Website'; ?>
+            <input type="text" name="website" tabindex="-1" value="" autocomplete="off">
+        </label>
+        <label><?php echo $fa ? 'شرکت' : 'Company'; ?>
+            <input type="text" name="company" tabindex="-1" value="" autocomplete="off" data-mb-antispam>
+        </label>
+    </div>
+
+    <div class="mb-cform__field mb-cform__field--comment">
+        <label class="mb-cform__label" for="comment-<?php echo htmlspecialchars($formId, ENT_QUOTES, 'UTF-8'); ?>">
+            <?php echo htmlspecialchars($commentLabel, ENT_QUOTES, 'UTF-8'); ?>
+            <span class="mb-cform__req" aria-hidden="true">*</span>
+        </label>
+        <textarea class="mb-cform__input mb-cform__textarea"
+                  id="comment-<?php echo htmlspecialchars($formId, ENT_QUOTES, 'UTF-8'); ?>"
+                  name="comment"
+                  rows="4"
+                  required
+                  placeholder="<?php echo htmlspecialchars($placeholder, ENT_QUOTES, 'UTF-8'); ?>"></textarea>
+        <p class="mb-cform__hint"><?php echo htmlspecialchars($formatHint, ENT_QUOTES, 'UTF-8'); ?></p>
+    </div>
+
+    <div class="mb-cform__row">
+        <div class="mb-cform__field">
+            <label class="mb-cform__label" for="name-<?php echo htmlspecialchars($formId, ENT_QUOTES, 'UTF-8'); ?>">
+                <?php echo htmlspecialchars($nameLabel, ENT_QUOTES, 'UTF-8'); ?>
+                <span class="mb-cform__req" aria-hidden="true">*</span>
+            </label>
+            <input class="mb-cform__input"
+                   type="text"
+                   id="name-<?php echo htmlspecialchars($formId, ENT_QUOTES, 'UTF-8'); ?>"
+                   name="name"
+                   required
+                   autocomplete="name"
+                   minlength="2">
+        </div>
+        <div class="mb-cform__field">
+            <label class="mb-cform__label" for="email-<?php echo htmlspecialchars($formId, ENT_QUOTES, 'UTF-8'); ?>">
+                <?php echo htmlspecialchars($emailLabel, ENT_QUOTES, 'UTF-8'); ?>
+                <span class="mb-cform__req" aria-hidden="true">*</span>
+            </label>
+            <input class="mb-cform__input"
+                   type="email"
+                   id="email-<?php echo htmlspecialchars($formId, ENT_QUOTES, 'UTF-8'); ?>"
+                   name="email"
+                   required
+                   autocomplete="email">
+            <p class="mb-cform__hint"><?php echo htmlspecialchars($emailHint, ENT_QUOTES, 'UTF-8'); ?></p>
+        </div>
+    </div>
+
+    <div class="mb-cform__footer">
+        <label class="mb-cform__check">
+            <input type="checkbox" name="notify" value="1">
+            <span><?php echo htmlspecialchars($notifyLabel, ENT_QUOTES, 'UTF-8'); ?></span>
+        </label>
+        <div class="mb-cform__actions">
+            <?php if ($isReply): ?>
+            <button type="button" class="mb-cform__btn mb-cform__btn--ghost" data-mb-cancel-reply>
+                <?php echo htmlspecialchars($cancelLabel, ENT_QUOTES, 'UTF-8'); ?>
+            </button>
+            <?php endif; ?>
+            <button type="submit" class="mb-cform__btn mb-cform__btn--primary">
+                <i data-lucide="<?php echo $isReply ? 'corner-down-left' : 'send'; ?>" class="h-4 w-4" aria-hidden="true"></i>
+                <span><?php echo htmlspecialchars($submitLabel, ENT_QUOTES, 'UTF-8'); ?></span>
+            </button>
+        </div>
+    </div>
+</form>
+        <?php
+        return ob_get_clean();
+    }
+}
+
+/**
+ * Render one comment (and nested children) as list item HTML.
+ *
+ * @param array $comment Comment node from buildCommentTree()
+ * @param string $urlpath Post URL path
+ * @return string
+ */
+if (!function_exists('mb_render_comment')) {
+    function mb_render_comment($comment, $urlpath)
+    {
+        if (empty($comment) || !is_array($comment)) {
+            return '';
+        }
+        $id = isset($comment['id']) ? (string)$comment['id'] : '';
+        $name = isset($comment['name']) ? (string)$comment['name'] : '';
+        $ts = isset($comment['timestamp']) ? $comment['timestamp'] : 0;
+        $level = isset($comment['level']) ? (int)$comment['level'] : 0;
+        $body = isset($comment['comment']) ? formatCommentText($comment['comment']) : '';
+        $initials = mb_comment_initials($name);
+        $tone = mb_comment_avatar_tone($name);
+        $date = mb_comment_date($ts);
+        $iso = $ts ? date('c', (int)$ts) : '';
+        $replyLabel = i18n('Reply');
+        $fa = (mb_lang_code() === 'fa');
+        $replyTo = $fa
+            ? ('پاسخ به ' . $name)
+            : ('Reply to ' . $name);
+
+        ob_start();
+        ?>
+<li class="mb-comment" id="comment-<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>" data-level="<?php echo $level; ?>">
+    <article class="mb-comment__card">
+        <div class="mb-comment__avatar mb-comment__avatar--<?php echo htmlspecialchars($tone, ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true">
+            <?php echo htmlspecialchars($initials, ENT_QUOTES, 'UTF-8'); ?>
+        </div>
+        <div class="mb-comment__main">
+            <header class="mb-comment__meta">
+                <span class="mb-comment__author"><?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?></span>
+                <?php if ($date !== ''): ?>
+                <time class="mb-comment__date" datetime="<?php echo htmlspecialchars($iso, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?></time>
+                <?php endif; ?>
+            </header>
+            <div class="mb-comment__body"><?php echo $body; ?></div>
+            <footer class="mb-comment__footer">
+                <button type="button"
+                        class="mb-comment__reply"
+                        data-mb-reply="<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>"
+                        aria-expanded="false"
+                        aria-controls="mb-reply-slot-<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>">
+                    <i data-lucide="reply" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                    <span><?php echo htmlspecialchars($replyLabel, ENT_QUOTES, 'UTF-8'); ?></span>
+                </button>
+            </footer>
+            <div class="mb-comment__reply-slot"
+                 id="mb-reply-slot-<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>"
+                 hidden
+                 data-reply-title="<?php echo htmlspecialchars($replyTo, ENT_QUOTES, 'UTF-8'); ?>"></div>
+        </div>
+    </article>
+    <?php if (!empty($comment['children']) && is_array($comment['children'])): ?>
+    <ol class="mb-comments__list mb-comments__list--nested">
+        <?php foreach ($comment['children'] as $child): ?>
+            <?php echo mb_render_comment($child, $urlpath); ?>
+        <?php endforeach; ?>
+    </ol>
+    <?php endif; ?>
+</li>
+        <?php
+        return ob_get_clean();
+    }
+}
+
+/**
+ * Render full local comments section for a post/page URL.
+ *
+ * @param string $url Full post URL or path
+ * @return void
+ */
+if (!function_exists('mb_comments_section')) {
+    function mb_comments_section($url)
+    {
+        if (!function_exists('local') || !local()) {
+            return;
+        }
+
+        $urlpath = ltrim((string)parse_url($url, PHP_URL_PATH), '/');
+        if ($urlpath === '' && is_string($url)) {
+            $urlpath = ltrim($url, '/');
+        }
+
+        $comments = function_exists('getComments') ? getComments($urlpath, null) : array();
+        if (!is_array($comments)) {
+            $comments = array();
+        }
+        $tree = function_exists('buildCommentTree') ? buildCommentTree($comments) : array();
+        $count = count($comments);
+
+        include __DIR__ . '/partials/comments.html.php';
+    }
+}
