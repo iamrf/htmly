@@ -206,15 +206,30 @@ if (!function_exists('mb_ensure_theme_ini')) {
 }
 
 /**
- * Clear cache/page when theme INI mtime is newer than last seen stamp.
+ * Clear cache/page when theme INI or key theme assets are newer than last stamp.
+ * Ensures post/comments/TOC markup + CSS/JS updates are not stuck behind HTML cache.
  */
 if (!function_exists('mb_bust_cache_if_settings_changed')) {
-    function mb_bust_cache_if_settings_changed($iniFile)
+    function mb_bust_cache_if_settings_changed($iniFile = null)
     {
-        if (!file_exists($iniFile)) {
+        $watch = array(
+            $iniFile,
+            __DIR__ . '/functions.php',
+            __DIR__ . '/post.html.php',
+            __DIR__ . '/layout.html.php',
+            __DIR__ . '/css/style.css',
+            __DIR__ . '/js/app.js',
+            __DIR__ . '/partials/comments.html.php',
+        );
+        $mtime = 0;
+        foreach ($watch as $file) {
+            if (!empty($file) && is_file($file)) {
+                $mtime = max($mtime, (int)filemtime($file));
+            }
+        }
+        if ($mtime <= 0) {
             return;
         }
-        $mtime = (int)filemtime($iniFile);
         $stampFile = 'cache/page/.mb-theme-stamp';
         $prev = 0;
         if (file_exists($stampFile)) {
@@ -235,6 +250,8 @@ if (!function_exists('mb_bust_cache_if_settings_changed')) {
 
 // Boot settings as soon as theme functions load
 mb_ensure_theme_ini();
+// Also watch theme source files (not only INI) for page-cache invalidation
+mb_bust_cache_if_settings_changed(null);
 
 /**
  * Active language code (e.g. fa, en, ar).
@@ -1074,6 +1091,22 @@ if (!function_exists('mb_share_buttons')) {
         }
         $html .= '</div>';
         return $html;
+    }
+}
+
+/**
+ * Theme asset URL with filemtime cache-bust so CSS/JS updates always apply.
+ *
+ * @param string $relative Path relative to theme root, e.g. css/style.css
+ * @return string
+ */
+if (!function_exists('mb_asset')) {
+    function mb_asset($relative)
+    {
+        $relative = ltrim(str_replace('\\', '/', (string)$relative), '/');
+        $file = __DIR__ . '/' . $relative;
+        $v = is_file($file) ? (string)filemtime($file) : (string)time();
+        return theme_path() . $relative . '?v=' . rawurlencode($v);
     }
 }
 

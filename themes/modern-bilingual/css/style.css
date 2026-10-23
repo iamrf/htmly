@@ -342,38 +342,81 @@ body.is-search-open {
   color: #fafafa;
 }
 
-/* TOC */
+/* TOC — each heading on its own row (inline + aside) */
 .mb-toc {
   position: sticky;
   top: 5rem;
 }
 
-.mb-toc a {
-  display: block;
-  padding: 0.25rem 0;
-  font-size: 0.8125rem;
-  color: #71717a;
-  text-decoration: none;
-  border-inline-start: 2px solid transparent;
-  padding-inline-start: 0.75rem;
-  transition: color 0.15s, border-color 0.15s;
+#mb-toc,
+.mb-toc #mb-toc {
+  width: 100%;
 }
 
+.mb-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.mb-toc-list > li {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.mb-toc-list a,
+#mb-toc a,
+.mb-toc a {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #71717a;
+  text-decoration: none;
+  border-radius: 0.65rem;
+  border: 1px solid transparent;
+  border-inline-start: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.mb-toc-list a:hover,
+.mb-toc-list a.is-active,
+#mb-toc a:hover,
+#mb-toc a.is-active,
 .mb-toc a:hover,
 .mb-toc a.is-active {
   color: #18181b;
+  background: #f4f4f5;
+  border-color: #e4e4e7;
   border-inline-start-color: #18181b;
 }
 
+.dark .mb-toc-list a:hover,
+.dark .mb-toc-list a.is-active,
+.dark #mb-toc a:hover,
+.dark #mb-toc a.is-active,
 .dark .mb-toc a:hover,
 .dark .mb-toc a.is-active {
   color: #fafafa;
+  background: #27272a;
+  border-color: #3f3f46;
   border-inline-start-color: #fafafa;
 }
 
+.mb-toc-list a.toc-h3,
+#mb-toc a.toc-h3,
 .mb-toc a.toc-h3 {
-  padding-inline-start: 1.25rem;
-  font-size: 0.75rem;
+  padding-inline-start: 1.35rem;
+  font-size: 0.8125rem;
 }
 
 /* Prose content tweaks for post body */
@@ -497,7 +540,8 @@ body.admin-bar .sticky {
   transform: rotate(180deg);
 }
 
-/* ========== Local comments ========== */
+/* ========== Local comments (v2) ========== */
+#comments.mb-comments,
 .mb-comments {
   --mb-c-surface: #ffffff;
   --mb-c-surface-soft: #f4f4f5;
@@ -509,8 +553,11 @@ body.admin-bar .sticky {
   --mb-c-primary-fg: #fafafa;
   --mb-c-thread: #e4e4e7;
   color: var(--mb-c-fg);
+  display: block;
+  width: 100%;
 }
 
+.dark #comments.mb-comments,
 .dark .mb-comments {
   --mb-c-surface: #18181b;
   --mb-c-surface-soft: #09090b;

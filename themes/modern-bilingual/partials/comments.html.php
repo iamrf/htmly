@@ -13,7 +13,9 @@ $emptyHint = $fa ? 'اولین نفری باشید که نظر می‌دهد.' :
 $composerTitle = i18n('Leave_a_comment');
 $writeCta = $fa ? 'نوشتن دیدگاه' : 'Write a comment';
 ?>
+<!-- mb-comments-ui:v2 -->
 <section class="mb-comments" id="comments" aria-labelledby="mb-comments-heading"
+         data-mb-ui="v2"
          data-comments-url="<?php echo htmlspecialchars($urlpath, ENT_QUOTES, 'UTF-8'); ?>"
          data-msg-success="<?php echo htmlspecialchars(i18n('comment_submission_success'), ENT_QUOTES, 'UTF-8'); ?>"
          data-msg-moderation="<?php echo htmlspecialchars(i18n('comment_submission_moderation'), ENT_QUOTES, 'UTF-8'); ?>"

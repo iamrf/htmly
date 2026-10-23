@@ -68,7 +68,7 @@ $showSidebar = ($sidebarPos !== 'hidden');
             }
         };
     </script>
-    <link rel="stylesheet" href="<?php echo theme_path(); ?>css/style.css">
+    <link rel="stylesheet" href="<?php echo mb_asset('css/style.css'); ?>">
 </head>
 <body class="<?php echo htmlspecialchars($bodyclass . ' ' . $fontClass, ENT_QUOTES, 'UTF-8'); ?> bg-zinc-50 text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100" data-referrer-param="<?php echo htmlspecialchars($referrer, ENT_QUOTES, 'UTF-8'); ?>">
 <?php if (facebook()) { echo facebook(); } ?>
@@ -228,7 +228,7 @@ $showSidebar = ($sidebarPos !== 'hidden');
 </button>
 
 <script src="https://unpkg.com/lucide@latest"></script>
-<script src="<?php echo theme_path(); ?>js/app.js"></script>
+<script src="<?php echo mb_asset('js/app.js'); ?>"></script>
 <script>if (window.lucide) lucide.createIcons();</script>
 <?php if (analytics()): ?><?php echo analytics(); ?><?php endif; ?>
 </body>

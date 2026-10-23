@@ -160,8 +160,9 @@
   if (tocNav && articleBody) {
     var headings = articleBody.querySelectorAll('h2, h3');
     if (headings && headings.length > 0) {
-      var list = document.createElement('nav');
-      list.className = 'mb-toc-list space-y-0.5';
+      var list = document.createElement('ul');
+      list.className = 'mb-toc-list';
+      list.setAttribute('role', 'list');
       var used = {};
 
       headings.forEach(function (h) {
@@ -175,11 +176,13 @@
           used[id] = true;
           h.id = id;
         }
+        var li = document.createElement('li');
         var a = document.createElement('a');
         a.href = '#' + h.id;
         a.textContent = h.textContent;
         a.className = h.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
-        list.appendChild(a);
+        li.appendChild(a);
+        list.appendChild(li);
       });
 
       tocNav.appendChild(list);

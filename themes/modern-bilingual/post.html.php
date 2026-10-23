@@ -65,9 +65,9 @@ $tocInline = $showToc && !$tocAside;
             </div>
 
             <?php if ($tocInline): ?>
-            <div class="mb-8 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+            <div class="mb-toc-panel mb-8 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
                 <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400"><?php echo mb_lang_code() === 'fa' ? 'فهرست مطالب' : 'On this page'; ?></h2>
-                <div id="mb-toc" class="hidden"></div>
+                <div id="mb-toc" class="mb-toc-nav hidden"></div>
                 <p class="toc-empty text-xs text-zinc-400" id="toc-fallback"><?php echo mb_lang_code() === 'fa' ? 'سرفصلی یافت نشد' : 'No headings found'; ?></p>
             </div>
             <?php endif; ?>
@@ -160,9 +160,9 @@ $tocInline = $showToc && !$tocAside;
 
         <?php if ($tocAside): ?>
         <aside class="hidden lg:col-span-4 lg:block">
-            <div class="mb-toc sticky top-24 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+            <div class="mb-toc mb-toc-panel sticky top-24 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
                 <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400"><?php echo mb_lang_code() === 'fa' ? 'فهرست مطالب' : 'On this page'; ?></h2>
-                <div id="mb-toc" class="hidden"></div>
+                <div id="mb-toc" class="mb-toc-nav hidden"></div>
                 <p class="toc-empty text-xs text-zinc-400" id="toc-fallback"><?php echo mb_lang_code() === 'fa' ? 'سرفصلی یافت نشد' : 'No headings found'; ?></p>
             </div>
         </aside>
