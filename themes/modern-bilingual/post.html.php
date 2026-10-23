@@ -140,7 +140,12 @@ $tocInline = $showToc && !$tocAside;
             <?php endif; ?>
             <?php endif; ?>
 
-            <?php if (facebook() || disqus()): ?>
+            <?php if (local()): ?>
+            <div class="mt-12 border-t border-zinc-200 pt-10 dark:border-zinc-800 mb-local-comments">
+                <h2 class="mb-6 text-xl font-bold tracking-tight"><?php echo i18n('Comments'); ?></h2>
+                <?php displayCommentsSection($p->url); ?>
+            </div>
+            <?php elseif (facebook() || disqus()): ?>
             <section class="mt-12 border-t border-zinc-200 pt-10 dark:border-zinc-800" id="comments">
                 <h2 class="mb-6 text-xl font-bold tracking-tight"><?php echo i18n('Comments'); ?></h2>
                 <?php if (facebook()): ?>
