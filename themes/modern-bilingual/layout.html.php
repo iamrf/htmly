@@ -80,9 +80,9 @@ $showSidebar = ($sidebarPos !== 'hidden');
 
 <div class="mb-atmosphere" aria-hidden="true"></div>
 
-<div class="relative min-h-screen flex flex-col">
+<div class="mb-page relative min-h-screen flex flex-col overflow-x-clip">
     <header class="<?php echo $stickyNav ? 'sticky top-0 z-40' : 'relative z-40'; ?> border-b border-zinc-200/80 bg-white/80 shadow-sm backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-900/80">
-        <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+        <div class="mx-auto flex w-full max-w-6xl min-w-0 items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
             <a href="<?php echo site_url(); ?>" class="group flex min-w-0 items-center gap-3">
                 <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-sm font-bold text-white transition group-hover:scale-105 dark:bg-zinc-100 dark:text-zinc-900">
                     <?php echo mb_substr(blog_title(), 0, 1, 'UTF-8'); ?>
@@ -149,8 +149,8 @@ $showSidebar = ($sidebarPos !== 'hidden');
 
     <!-- Mobile drawer -->
     <div class="menu-drawer" role="dialog" aria-modal="true" aria-label="Mobile menu" tabindex="-1">
-        <div class="menu-drawer-backdrop fixed inset-0 z-50 bg-zinc-950/40 backdrop-blur-sm" data-drawer-close></div>
-        <div class="menu-drawer-panel fixed inset-y-0 z-50 flex w-full max-w-xs flex-col bg-white shadow-2xl dark:bg-zinc-900 end-0">
+        <div class="menu-drawer-backdrop absolute inset-0 bg-zinc-950/40 backdrop-blur-sm" data-drawer-close></div>
+        <div class="menu-drawer-panel absolute inset-y-0 z-10 flex w-full max-w-xs flex-col bg-white shadow-2xl dark:bg-zinc-900 end-0">
             <div class="flex items-center justify-between border-b border-zinc-200 px-5 py-4 dark:border-zinc-800">
                 <span class="font-semibold"><?php echo blog_title(); ?></span>
                 <button type="button" class="menu-close inline-flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800" aria-label="Close menu" data-drawer-close>
@@ -170,23 +170,25 @@ $showSidebar = ($sidebarPos !== 'hidden');
         </div>
     </div>
 
-    <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <main class="mb-content mx-auto w-full max-w-6xl min-w-0 flex-1 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <?php if ($showSidebar): ?>
         <div class="grid gap-10 lg:grid-cols-12">
-            <div class="min-w-0 lg:col-span-8">
+            <div class="mb-content-col min-w-0 lg:col-span-8">
                 <?php echo content(); ?>
             </div>
-            <aside class="space-y-6 lg:col-span-4 <?php echo $sidebarPos === 'start' ? 'lg:order-first' : ''; ?>">
+            <aside class="mb-content-col min-w-0 space-y-6 lg:col-span-4 <?php echo $sidebarPos === 'start' ? 'lg:order-first' : ''; ?>">
                 <?php include __DIR__ . '/partials/sidebar.html.php'; ?>
             </aside>
         </div>
         <?php else: ?>
-            <?php echo content(); ?>
+            <div class="mb-content-col min-w-0">
+                <?php echo content(); ?>
+            </div>
         <?php endif; ?>
     </main>
 
     <footer class="mt-auto border-t border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div class="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-10 text-center sm:px-6 lg:px-8">
+        <div class="mx-auto flex w-full max-w-6xl min-w-0 flex-col items-center gap-5 px-4 py-10 text-center sm:px-6 lg:px-8">
             <?php if (mb_enabled('footer_social', true)): ?>
             <div class="social-links flex flex-wrap items-center justify-center gap-3">
                 <?php echo mb_render_social('justify-center', 'md'); ?>

@@ -13,7 +13,7 @@ $tocInline = $showToc && !$tocAside;
 <nav class="mb-breadcrumb" aria-label="Breadcrumb"><?php echo $breadcrumb; ?></nav>
 <?php endif; ?>
 
-<article class="animate-fade-up" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+<article class="animate-fade-up min-w-0 max-w-full" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
     <?php if (login()) { echo tab($p); } ?>
 
     <header class="mb-8 border-b border-zinc-200 pb-8 dark:border-zinc-800">
@@ -58,8 +58,8 @@ $tocInline = $showToc && !$tocAside;
         </div>
     </header>
 
-    <div class="grid gap-10 <?php echo $tocAside ? 'lg:grid-cols-12' : ''; ?>">
-        <div class="<?php echo $tocAside ? 'lg:col-span-8' : ''; ?>">
+    <div class="grid min-w-0 gap-10 <?php echo $tocAside ? 'lg:grid-cols-12' : ''; ?>">
+        <div class="min-w-0 <?php echo $tocAside ? 'lg:col-span-8' : ''; ?>">
             <div class="mb-8">
                 <?php echo mb_post_media($p, false); ?>
             </div>
